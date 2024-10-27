@@ -15,7 +15,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
 const ITEMS_PER_PAGE = 5;
 
-const SearchResults = ({ results }) => {
+const SearchResults = ({ results, hasSearched }) => {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
 
@@ -31,7 +31,31 @@ const SearchResults = ({ results }) => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!results.length) return null;
+  // Only show no results message if a search has been performed
+  if (!results.length && hasSearched) {
+    return (
+      <Box
+        sx={{
+          p: 3,
+          textAlign: "center",
+          color: "text.secondary",
+          mt: 4,
+        }}
+      >
+        <Typography variant="h6">
+          No tunes found matching your search
+        </Typography>
+        <Typography variant="body2" sx={{ mt: 1 }}>
+          Try adjusting your search terms or check the spelling
+        </Typography>
+      </Box>
+    );
+  }
+
+  // Return null if no search has been performed yet
+  if (!hasSearched) {
+    return null;
+  }
 
   const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
