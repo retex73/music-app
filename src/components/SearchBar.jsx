@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -9,7 +9,7 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="search-form">
+    <form onSubmit={handleSubmit} className="search-bar">
       <input
         type="text"
         value={query}

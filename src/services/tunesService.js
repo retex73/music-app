@@ -40,3 +40,16 @@ export const searchTunes = (query) => {
 
   return mappedResults;
 };
+
+export const getTuneById = async (tuneId) => {
+  try {
+    const response = await fetch(
+      `https://itunes.apple.com/lookup?id=${tuneId}`
+    );
+    const data = await response.json();
+    return data.results[0];
+  } catch (error) {
+    console.error("Error fetching tune details:", error);
+    throw error;
+  }
+};

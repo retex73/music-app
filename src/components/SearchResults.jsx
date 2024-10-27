@@ -1,10 +1,23 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+
 const SearchResults = ({ results }) => {
+  const navigate = useNavigate();
+
+  const handleTuneClick = (tuneId) => {
+    navigate(`/tune/${tuneId}`);
+  };
+
   if (!results.length) return null;
 
   return (
     <div className="search-results">
       {results.map((tune, index) => (
-        <div key={index} className="result-card">
+        <div
+          key={index}
+          className="result-card"
+          onClick={() => handleTuneClick(tune.trackId)}
+        >
           <h3>{tune["Tune Title"]}</h3>
           <div className="result-details">
             <span>{tune.Genre}</span>
