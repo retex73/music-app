@@ -20,6 +20,8 @@ const SearchResults = ({ results }) => {
   const [page, setPage] = useState(1);
 
   const handleTuneClick = (tuneId) => {
+    // console log the tune id
+    console.log("Tune ID:", tuneId);
     navigate(`/tune/${tuneId}`);
   };
 
@@ -56,7 +58,7 @@ const SearchResults = ({ results }) => {
                   cursor: "pointer",
                 },
               }}
-              onClick={() => handleTuneClick(tune.trackId)}
+              onClick={() => handleTuneClick(tune["Tune No."])}
             >
               <CardContent
                 sx={{

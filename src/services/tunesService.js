@@ -43,11 +43,21 @@ export const searchTunes = (query) => {
 
 export const getTuneById = async (tuneId) => {
   try {
-    const response = await fetch(
-      `https://itunes.apple.com/lookup?id=${tuneId}`
+    // If tunesData hasn't been loaded yet, load it
+    if (!tunesData) {
+      await initializeTunesData();
+    }
+
+    // Find the tune where "Tune No." matches tuneId
+    const tune = tunesData.find(
+      (tune) => tune["Tune No."] === tuneId.toString()
     );
-    const data = await response.json();
-    return data.results[0];
+
+    if (!tune) {
+      throw new Error(`Tune with ID ${tuneId} not found`);
+    }
+
+    return tune;
   } catch (error) {
     console.error("Error fetching tune details:", error);
     throw error;
