@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -9,23 +9,40 @@ import {
   Button,
   Chip,
   Stack,
+  Pagination,
 } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 
+const ITEMS_PER_PAGE = 5;
+
 const SearchResults = ({ results }) => {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
 
   const handleTuneClick = (tuneId) => {
     navigate(`/tune/${tuneId}`);
   };
 
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    // Smooth scroll to top of results
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   if (!results.length) return null;
+
+  const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
+  const startIndex = (page - 1) * ITEMS_PER_PAGE;
+  const paginatedResults = results.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
 
   return (
     <Box sx={{ p: 3, maxWidth: "900px", mx: "auto" }}>
       <Grid container spacing={2}>
-        {results.map((tune, index) => (
-          <Grid item xs={12} key={index}>
+        {paginatedResults.map((tune, index) => (
+          <Grid item xs={12} key={startIndex + index}>
             <Card
               sx={{
                 height: "100%",
@@ -122,6 +139,56 @@ const SearchResults = ({ results }) => {
           </Grid>
         ))}
       </Grid>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            mt: 4,
+            mb: 2,
+          }}
+        >
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+            size="large"
+            sx={{
+              "& .MuiPaginationItem-root": {
+                color: "text.primary",
+                "&.Mui-selected": {
+                  backgroundColor: "primary.main",
+                  "&:hover": {
+                    backgroundColor: "primary.dark",
+                  },
+                },
+                "&:hover": {
+                  backgroundColor: "rgba(255, 107, 53, 0.2)",
+                },
+              },
+            }}
+          />
+        </Box>
+      )}
+
+      {/* Results count */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 2,
+          color: "text.secondary",
+        }}
+      >
+        <Typography variant="body2">
+          Showing {startIndex + 1}-
+          {Math.min(startIndex + ITEMS_PER_PAGE, results.length)} of{" "}
+          {results.length} results
+        </Typography>
+      </Box>
     </Box>
   );
 };
