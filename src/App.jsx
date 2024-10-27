@@ -1,38 +1,23 @@
-import { useState, useEffect } from "react";
-import { initializeTunesData, searchTunes } from "./services/tunesService";
-import SearchBar from "./components/SearchBar";
-import SearchResults from "./components/SearchResults";
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import TuneDetailsPage from "./pages/TuneDetailsPage";
 import "./App.css";
+import { ThemeProvider } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import darkTheme from "./theme/darkTheme";
 
 function App() {
-  const [results, setResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    initializeTunesData()
-      .then(() => setIsLoading(false))
-      .catch(console.error);
-  }, []);
-
-  const handleSearch = (query) => {
-    const searchResults = searchTunes(query);
-    setResults(searchResults);
-  };
-
-  if (isLoading) {
-    return <div className="loading">Loading...</div>;
-  }
-
   return (
-    <div className="app">
-      <header className="app-header">
-        <h1>Irish Tunes Search</h1>
-      </header>
-      <main className="main-content">
-        <SearchBar onSearch={handleSearch} />
-        <SearchResults results={results} />
-      </main>
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/tune/:tuneId" element={<TuneDetailsPage />} />
+        </Routes>
+      </div>
+    </ThemeProvider>
   );
 }
 

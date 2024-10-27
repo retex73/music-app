@@ -40,3 +40,26 @@ export const searchTunes = (query) => {
 
   return mappedResults;
 };
+
+export const getTuneById = async (tuneId) => {
+  try {
+    // If tunesData hasn't been loaded yet, load it
+    if (!tunesData) {
+      await initializeTunesData();
+    }
+
+    // Find the tune where "Tune No." matches tuneId
+    const tune = tunesData.find(
+      (tune) => tune["Tune No."] === tuneId.toString()
+    );
+
+    if (!tune) {
+      throw new Error(`Tune with ID ${tuneId} not found`);
+    }
+
+    return tune;
+  } catch (error) {
+    console.error("Error fetching tune details:", error);
+    throw error;
+  }
+};
