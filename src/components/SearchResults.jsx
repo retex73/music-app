@@ -22,10 +22,10 @@ const SearchResults = ({ results }) => {
   if (!results.length) return null;
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Grid container spacing={3}>
+    <Box sx={{ p: 3, maxWidth: "900px", mx: "auto" }}>
+      <Grid container spacing={2}>
         {results.map((tune, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+          <Grid item xs={12} key={index}>
             <Card
               sx={{
                 height: "100%",
@@ -41,51 +41,62 @@ const SearchResults = ({ results }) => {
               }}
               onClick={() => handleTuneClick(tune.trackId)}
             >
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{
-                    color: "primary.main",
-                    fontWeight: 600,
-                    mb: 2,
-                  }}
-                >
-                  {tune["Tune Title"]}
-                </Typography>
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: { xs: "column", sm: "row" },
+                  alignItems: { sm: "center" },
+                  justifyContent: { sm: "space-between" },
+                  gap: 2,
+                  py: 3,
+                }}
+              >
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    component="h3"
+                    gutterBottom
+                    sx={{
+                      color: "primary.main",
+                      fontWeight: 600,
+                      mb: 2,
+                    }}
+                  >
+                    {tune["Tune Title"]}
+                  </Typography>
 
-                <Stack
-                  direction="row"
-                  spacing={1}
-                  flexWrap="wrap"
-                  sx={{ mb: 2, gap: 1 }}
-                >
-                  <Chip
-                    label={tune.Genre}
-                    size="small"
-                    sx={{
-                      bgcolor: "background.paper",
-                      "&:hover": { bgcolor: "background.paper" },
-                    }}
-                  />
-                  <Chip
-                    label={tune.Rhythm}
-                    size="small"
-                    sx={{
-                      bgcolor: "background.paper",
-                      "&:hover": { bgcolor: "background.paper" },
-                    }}
-                  />
-                  <Chip
-                    label={`${tune.Key} ${tune.Mode}`}
-                    size="small"
-                    sx={{
-                      bgcolor: "background.paper",
-                      "&:hover": { bgcolor: "background.paper" },
-                    }}
-                  />
-                </Stack>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    flexWrap="wrap"
+                    sx={{ gap: 1 }}
+                  >
+                    <Chip
+                      label={tune.Genre}
+                      size="small"
+                      sx={{
+                        bgcolor: "background.paper",
+                        "&:hover": { bgcolor: "background.paper" },
+                      }}
+                    />
+                    <Chip
+                      label={tune.Rhythm}
+                      size="small"
+                      sx={{
+                        bgcolor: "background.paper",
+                        "&:hover": { bgcolor: "background.paper" },
+                      }}
+                    />
+                    <Chip
+                      label={`${tune.Key} ${tune.Mode}`}
+                      size="small"
+                      sx={{
+                        bgcolor: "background.paper",
+                        "&:hover": { bgcolor: "background.paper" },
+                      }}
+                    />
+                  </Stack>
+                </Box>
 
                 <Button
                   variant="contained"
@@ -96,9 +107,9 @@ const SearchResults = ({ results }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  fullWidth
                   sx={{
-                    mt: "auto",
+                    minWidth: "160px",
+                    height: "40px",
                     "&:hover": {
                       transform: "scale(1.02)",
                     },
