@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Paper, InputBase, IconButton } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
+import SearchIcon from "@mui/icons-material/Search"; // Make sure @mui/icons-material is installed
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -17,6 +17,7 @@ const SearchBar = ({ onSearch }) => {
 
   return (
     <Paper
+      elevation={0}
       sx={{
         p: "2px 4px",
         display: "flex",
@@ -24,12 +25,35 @@ const SearchBar = ({ onSearch }) => {
         width: "100%",
         maxWidth: 600,
         borderRadius: "100px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        transition: "all 0.2s ease-in-out",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        "&:hover": {
+          border: "1px solid rgba(255, 255, 255, 0.12)",
+        },
+        "&:focus-within": {
+          border: "1px solid rgba(255, 255, 255, 0.16)",
+          backgroundColor: "rgba(255, 255, 255, 0.08)",
+        },
       }}
     >
-      <SearchIcon sx={{ p: "10px", color: "text.secondary" }} />
+      <IconButton sx={{ p: "10px" }}>
+        <SearchIcon
+          sx={{
+            color: "white", // Explicit white color
+            fontSize: 24, // Explicit size
+          }}
+        />
+      </IconButton>
       <InputBase
-        sx={{ ml: 1, flex: 1 }}
+        sx={{
+          ml: 1,
+          flex: 1,
+          "& input": {
+            padding: "8px 0",
+            fontSize: "0.95rem",
+            fontWeight: 400,
+          },
+        }}
         placeholder="Searching is easier"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
