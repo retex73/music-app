@@ -44,14 +44,14 @@ function TuneDetailsPage() {
 
   return (
     <Box sx={{ p: 3, maxWidth: "800px", mx: "auto" }}>
-      <IconButton
+      <Button
         onClick={() => navigate("/")}
+        startIcon={<ArrowBackIcon />}
         sx={{ mb: 2 }}
         aria-label="back to search"
       >
-        <ArrowBackIcon />
-        <Typography sx={{ ml: 1 }}>Back to Search</Typography>
-      </IconButton>
+        Back to Search
+      </Button>
 
       <Card>
         <CardContent>

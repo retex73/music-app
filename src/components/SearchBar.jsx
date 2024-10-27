@@ -54,7 +54,7 @@ const SearchBar = ({ onSearch }) => {
             fontWeight: 400,
           },
         }}
-        placeholder="Searching is easier"
+        placeholder="Search for tunes"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         type="text"
