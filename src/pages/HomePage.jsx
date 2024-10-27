@@ -8,6 +8,7 @@ import { Container, Typography, Box, CircularProgress } from "@mui/material";
 const HomePage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasSearched, setHasSearched] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -18,8 +19,12 @@ const HomePage = () => {
   }, []);
 
   const handleSearch = (query) => {
+    setHasSearched(true);
     const results = searchTunes(query);
     setSearchResults(results);
+    if (!query.trim()) {
+      setHasSearched(false);
+    }
   };
 
   return (
@@ -41,7 +46,7 @@ const HomePage = () => {
             <CircularProgress />
           </Box>
         ) : (
-          <SearchResults results={searchResults} />
+          <SearchResults results={searchResults} hasSearched={hasSearched} />
         )}
       </Box>
     </Container>

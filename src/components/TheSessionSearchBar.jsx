@@ -1,39 +1,26 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Paper, InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import debounce from "lodash/debounce"; // Make sure to install lodash
 
-const SearchBar = ({ onSearch }) => {
+const TheSessionSearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
-
-  const debouncedSearch = useCallback(
-    debounce((searchTerm) => {
-      onSearch(searchTerm.trim());
-    }, 500),
-    [onSearch]
-  );
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setQuery(value);
-    debouncedSearch(value);
+    onSearch(value); // Remove trim() here as it might interfere with typing
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    debouncedSearch.cancel();
-    onSearch(query.trim());
+    if (query.trim()) {
+      // Only submit if there's actual content
+      onSearch(query);
+    }
   };
 
-  // Cleanup on unmount
-  React.useEffect(() => {
-    return () => {
-      debouncedSearch.cancel();
-    };
-  }, [debouncedSearch]);
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} style={{ width: "100%", maxWidth: "600px" }}>
       <Paper
         elevation={0}
         sx={{
@@ -41,7 +28,6 @@ const SearchBar = ({ onSearch }) => {
           display: "flex",
           alignItems: "center",
           width: "100%",
-          maxWidth: 600,
           borderRadius: "100px",
           transition: "all 0.2s ease-in-out",
           border: "1px solid rgba(255, 255, 255, 0.08)",
@@ -54,7 +40,7 @@ const SearchBar = ({ onSearch }) => {
           },
         }}
       >
-        <IconButton type="submit" sx={{ p: "10px" }}>
+        <IconButton type="submit" sx={{ p: "10px" }} aria-label="search">
           <SearchIcon
             sx={{
               color: "white",
@@ -72,7 +58,7 @@ const SearchBar = ({ onSearch }) => {
               fontWeight: 400,
             },
           }}
-          placeholder="Search for tunes"
+          placeholder="Search The Session tunes..."
           value={query}
           onChange={handleInputChange}
           type="text"
@@ -82,4 +68,4 @@ const SearchBar = ({ onSearch }) => {
   );
 };
 
-export default SearchBar;
+export default TheSessionSearchBar;
