@@ -8,10 +8,9 @@ const SearchBar = ({ onSearch }) => {
   // Add debounced search
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (query.trim()) {
-        onSearch(query);
-      }
-    }, 300); // 300ms delay
+      // Trigger search with empty string when query is empty
+      onSearch(query.trim());
+    }, 300);
 
     return () => clearTimeout(timeoutId);
   }, [query, onSearch]);
