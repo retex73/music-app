@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import YouTube from "react-youtube";
 
 function TuneDetailsPage() {
   const { tuneId } = useParams();
@@ -41,6 +42,13 @@ function TuneDetailsPage() {
       </Box>
     );
   }
+
+  const getVideoId = (url) => {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
 
   return (
     <Box sx={{ p: 3, maxWidth: "800px", mx: "auto" }}>
@@ -99,6 +107,21 @@ function TuneDetailsPage() {
             </Box>
           </Stack>
 
+          {tune["Learning Video"] && (
+            <Box sx={{ mb: 3 }}>
+              <YouTube
+                videoId={getVideoId(tune["Learning Video"])}
+                opts={{
+                  width: "100%",
+                  height: "400",
+                  playerVars: {
+                    autoplay: 0,
+                  },
+                }}
+              />
+            </Box>
+          )}
+
           <Button
             variant="contained"
             color="secondary"
@@ -114,7 +137,7 @@ function TuneDetailsPage() {
               },
             }}
           >
-            Watch Tutorial Video
+            Watch on YouTube
           </Button>
         </CardContent>
       </Card>
