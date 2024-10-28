@@ -14,11 +14,14 @@ import {
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import YouTube from "react-youtube";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 function TuneDetailsPage() {
   const { tuneId } = useParams();
   const navigate = useNavigate();
   const [tune, setTune] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const fetchTune = async () => {
@@ -34,6 +37,26 @@ function TuneDetailsPage() {
       fetchTune();
     }
   }, [tuneId]);
+
+  useEffect(() => {
+    // Check if the tune is already a favorite
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setIsFavorite(favorites.includes(tuneId));
+  }, [tuneId]);
+
+  const toggleFavorite = () => {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (isFavorite) {
+      // Remove from favorites
+      const updatedFavorites = favorites.filter((id) => id !== tuneId);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    } else {
+      // Add to favorites
+      favorites.push(tuneId);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+    }
+    setIsFavorite(!isFavorite);
+  };
 
   if (!tune) {
     return (
@@ -63,14 +86,27 @@ function TuneDetailsPage() {
 
       <Card>
         <CardContent>
-          <Typography
-            variant="h4"
-            component="h1"
-            gutterBottom
-            color="primary.main"
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
           >
-            {tune["Tune Title"]}
-          </Typography>
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              color="primary.main"
+            >
+              {tune["Tune Title"]}
+            </Typography>
+            <IconButton onClick={toggleFavorite} aria-label="toggle favorite">
+              {isFavorite ? (
+                <FavoriteIcon color="error" />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
+            </IconButton>
+          </Stack>
 
           <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
             <Chip label={`Set ${tune["Set No."]}`} />
