@@ -36,7 +36,7 @@ const NavBar = () => {
         </LogoText>
         <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
           <NavButton component={RouterLink} to="/">
-            Home
+            Hatao's Tune a Day
           </NavButton>
           <NavButton component={RouterLink} to="/thesession">
             The Session
