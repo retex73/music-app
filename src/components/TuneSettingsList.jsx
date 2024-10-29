@@ -5,34 +5,36 @@ import abcjs from "abcjs";
 const TuneSettingsList = ({ settings }) => {
   useEffect(() => {
     settings.forEach((setting) => {
-      // Construct complete ABC notation with headers
       const completeAbc = `X:${setting.id}
 M:4/4
 L:1/8
 K:${setting.key.replace("major", "").replace("minor", "m")}
 ${setting.abc}`;
 
-      console.log("Complete ABC:", completeAbc); // For debugging
+      const container = document.getElementById(`paper-${setting.id}`);
+      const containerWidth = container?.clientWidth || 800;
 
       abcjs.renderAbc(`paper-${setting.id}`, completeAbc, {
-        responsive: "resize",
-        staffwidth: 600,
-        scale: 2.2,
-        paddingleft: 10,
+        scale: 1.5,
+        staffwidth: Math.min(containerWidth - 40, 800),
+        wrap: {
+          minSpacing: 1.8,
+          maxSpacing: 2.7,
+          preferredMeasuresPerLine: 4,
+        },
         paddingright: 10,
-        staffsep: 60,
-        systemsep: 80,
-        foregroundColor: "#000000",
-        backgroundColor: "#FFFFFF",
+        paddingleft: 10,
+        format: {
+          headerfont: "Arial 16px",
+          gchordfont: "Arial 16px",
+          vocalfont: "Arial 16px",
+        },
       });
     });
   }, [settings]);
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>
-        ABC Notations ({settings.length})
-      </Typography>
       <Stack spacing={2}>
         {settings.map((setting) => (
           <Card
@@ -40,9 +42,13 @@ ${setting.abc}`;
             sx={{
               width: "100%",
               backgroundColor: "#FFFFFF",
+              foregroundColor: "#000000",
+              contain: "layout paint",
               "& svg": {
                 maxWidth: "100%",
                 height: "auto",
+                minHeight: "200px",
+                display: "block",
               },
             }}
           >
@@ -61,8 +67,15 @@ ${setting.abc}`;
                   id={`paper-${setting.id}`}
                   style={{
                     backgroundColor: "#FFFFFF",
+                    color: "#000000",
                     padding: "20px",
                     overflowX: "auto",
+                    width: "100%",
+                    contain: "layout paint",
+                    minHeight: "200px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 />
               </Stack>
