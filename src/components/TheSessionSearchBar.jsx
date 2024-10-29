@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Paper, InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
-const TheSessionSearchBar = ({ onSearch }) => {
-  const [query, setQuery] = useState("");
+const TheSessionSearchBar = ({ onSearch, initialQuery = "" }) => {
+  const [query, setQuery] = useState(initialQuery);
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -13,10 +13,7 @@ const TheSessionSearchBar = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (query.trim()) {
-      // Only submit if there's actual content
-      onSearch(query);
-    }
+    onSearch(query);
   };
 
   return (

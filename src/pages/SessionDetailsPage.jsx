@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getSessionTuneById } from "../services/sessionService";
 import {
   Box,
@@ -16,6 +16,7 @@ import TuneSettingsList from "../components/TuneSettingsList";
 const SessionDetailsPage = () => {
   const { tuneId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const [tune, setTune] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -75,6 +76,19 @@ const SessionDetailsPage = () => {
     }
   }, [tuneId]);
 
+  const handleBackToSearch = () => {
+    // If we came from search and have stored results, go back
+    if (
+      location.state?.fromSearch &&
+      localStorage.getItem("lastSessionResults")
+    ) {
+      navigate(-1);
+    } else {
+      // Otherwise, just navigate to the main page
+      navigate("/thesession");
+    }
+  };
+
   if (loading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -103,7 +117,7 @@ const SessionDetailsPage = () => {
     <Container maxWidth="md">
       <Box sx={{ py: 4 }}>
         <Button
-          onClick={() => navigate("/thesession")}
+          onClick={handleBackToSearch}
           startIcon={<ArrowBackIcon />}
           sx={{ mb: 3 }}
         >

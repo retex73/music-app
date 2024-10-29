@@ -32,12 +32,17 @@ const TheSessionPage = () => {
     const saved = localStorage.getItem("sessionfavourites");
     return saved ? JSON.parse(saved) : [];
   });
+  const [searchQuery, setSearchQuery] = useState(() => {
+    return localStorage.getItem("lastSessionSearch") || "";
+  });
 
   const navigate = useNavigate();
 
   const debouncedFetch = useCallback(async (searchTerm) => {
     if (!searchTerm) {
       setTunes([]);
+      localStorage.removeItem("lastSessionSearch");
+      localStorage.removeItem("lastSessionResults");
       return;
     }
 
@@ -46,6 +51,8 @@ const TheSessionPage = () => {
     try {
       const tunes = await searchSessionTunes(searchTerm);
       setTunes(tunes);
+      localStorage.setItem("lastSessionSearch", searchTerm);
+      localStorage.setItem("lastSessionResults", JSON.stringify(tunes));
     } catch (err) {
       setError(err.message);
       setTunes([]);
@@ -107,6 +114,16 @@ const TheSessionPage = () => {
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const paginatedTunes = tunes.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
+  useEffect(() => {
+    const lastSearch = localStorage.getItem("lastSessionSearch");
+    const lastResults = localStorage.getItem("lastSessionResults");
+
+    if (lastSearch && lastResults) {
+      setSearchQuery(lastSearch);
+      setTunes(JSON.parse(lastResults));
+    }
+  }, []);
+
   return (
     <Container maxWidth="md">
       <Box
@@ -121,7 +138,10 @@ const TheSessionPage = () => {
           The Session Tunes
         </Typography>
 
-        <TheSessionSearchBar onSearch={handleSearch} />
+        <TheSessionSearchBar
+          onSearch={handleSearch}
+          initialQuery={searchQuery}
+        />
 
         {loading && (
           <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -158,7 +178,11 @@ const TheSessionPage = () => {
                         cursor: "pointer",
                       },
                     }}
-                    onClick={() => navigate(`/thesession/tune/${tune.id}`)}
+                    onClick={() =>
+                      navigate(`/thesession/tune/${tune.id}`, {
+                        state: { fromSearch: true },
+                      })
+                    }
                   >
                     <CardContent
                       sx={{
