@@ -19,6 +19,7 @@ import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
+import { searchSessionTunes } from "../services/sessionService";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -43,13 +44,8 @@ const TheSessionPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const url = `https://thesession.org/tunes/search?q=${searchTerm}&format=json`;
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error("Failed to fetch tunes");
-      }
-      const data = await response.json();
-      setTunes(data.tunes || []);
+      const tunes = await searchSessionTunes(searchTerm);
+      setTunes(tunes);
     } catch (err) {
       setError(err.message);
       setTunes([]);

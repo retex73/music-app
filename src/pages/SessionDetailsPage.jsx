@@ -5,18 +5,13 @@ import {
   Box,
   Container,
   Typography,
-  Card,
-  CardContent,
   Button,
-  Stack,
-  Chip,
-  IconButton,
   CircularProgress,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+
+import TuneSummaryCard from "../components/TuneSummaryCard";
+import TuneSettingsList from "../components/TuneSettingsList";
 
 const SessionDetailsPage = () => {
   const { tuneId } = useParams();
@@ -93,94 +88,13 @@ const SessionDetailsPage = () => {
           Back to Search
         </Button>
 
-        <Card>
-          <CardContent sx={{ p: 4 }}>
-            <Stack
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
-              sx={{ mb: 3 }}
-            >
-              <Typography variant="h4" component="h1" color="primary.main">
-                {tune.name}
-              </Typography>
-              <IconButton
-                onClick={handleToggleFavorite}
-                sx={{
-                  color: favorites.includes(tuneId) ? "error.main" : "inherit",
-                }}
-              >
-                {favorites.includes(tuneId) ? (
-                  <FavoriteIcon />
-                ) : (
-                  <FavoriteBorderIcon />
-                )}
-              </IconButton>
-            </Stack>
+        <TuneSummaryCard
+          tune={tune}
+          isFavorite={favorites.includes(tuneId)}
+          onToggleFavorite={handleToggleFavorite}
+        />
 
-            <Stack spacing={3}>
-              {tune.type && (
-                <Box>
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Type
-                  </Typography>
-                  <Chip label={tune.type} />
-                </Box>
-              )}
-
-              {tune.settings && (
-                <Box>
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Settings
-                  </Typography>
-                  <Typography>{tune.settings.length} versions</Typography>
-                </Box>
-              )}
-
-              {tune.date && (
-                <Box>
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                    gutterBottom
-                  >
-                    Added
-                  </Typography>
-                  <Typography>
-                    {new Date(tune.date).toLocaleDateString()}
-                  </Typography>
-                </Box>
-              )}
-            </Stack>
-
-            <Button
-              variant="contained"
-              color="secondary"
-              startIcon={<PlayCircleOutlineIcon />}
-              href={tune.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              fullWidth
-              sx={{
-                mt: 4,
-                py: 1.5,
-                "&:hover": {
-                  transform: "scale(1.02)",
-                },
-              }}
-            >
-              View on TheSession
-            </Button>
-          </CardContent>
-        </Card>
+        {tune?.settings && <TuneSettingsList settings={tune.settings} />}
       </Box>
     </Container>
   );
