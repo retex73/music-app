@@ -13,8 +13,11 @@ import {
   Stack,
   Chip,
   Pagination,
+  IconButton,
 } from "@mui/material";
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -23,6 +26,10 @@ const TheSessionPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("sessionfavourites");
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const debouncedFetch = useCallback(async (searchTerm) => {
     if (!searchTerm) {
@@ -65,6 +72,17 @@ const TheSessionPage = () => {
     setPage(value);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
+  const handleToggleFavorite = useCallback((tuneId) => {
+    setFavorites((prevFavorites) => {
+      const newFavorites = prevFavorites.includes(tuneId)
+        ? prevFavorites.filter((id) => id !== tuneId)
+        : [...prevFavorites, tuneId];
+
+      localStorage.setItem("sessionfavourites", JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  }, []);
 
   // Calculate pagination values
   const totalPages = Math.ceil(tunes.length / ITEMS_PER_PAGE);
@@ -173,25 +191,50 @@ const TheSessionPage = () => {
                         </Stack>
                       </Box>
 
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<PlayCircleOutlineIcon />}
-                        component="a"
-                        href={tune.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        sx={{
-                          minWidth: "160px",
-                          height: "40px",
-                          "&:hover": {
-                            transform: "scale(1.02)",
-                          },
-                        }}
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
                       >
-                        View on TheSession
-                      </Button>
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleFavorite(tune.id);
+                          }}
+                          sx={{
+                            color: favorites.includes(tune.id)
+                              ? "error.main"
+                              : "inherit",
+                            "&:hover": {
+                              transform: "scale(1.1)",
+                            },
+                          }}
+                        >
+                          {favorites.includes(tune.id) ? (
+                            <FavoriteIcon />
+                          ) : (
+                            <FavoriteBorderIcon />
+                          )}
+                        </IconButton>
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          startIcon={<PlayCircleOutlineIcon />}
+                          component="a"
+                          href={tune.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          sx={{
+                            minWidth: "160px",
+                            height: "40px",
+                            "&:hover": {
+                              transform: "scale(1.02)",
+                            },
+                          }}
+                        >
+                          View on TheSession
+                        </Button>
+                      </Box>
                     </CardContent>
                   </Card>
                 </Grid>

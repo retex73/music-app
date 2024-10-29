@@ -18,7 +18,7 @@ function App() {
       <Box
         sx={{
           minHeight: "100vh",
-          backgroundColor: "background.default",
+          //   backgroundColor: "background.default",
           display: "flex",
           flexDirection: "column",
         }}
