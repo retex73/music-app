@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import TuneDetailsPage from "./pages/TuneDetailsPage";
 import TheSessionPage from "./pages/TheSessionPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SessionDetailsPage from "./pages/SessionDetailsPage";
 import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -29,6 +30,10 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/tune/:tuneId" element={<TuneDetailsPage />} />
             <Route path="/thesession" element={<TheSessionPage />} />
+            <Route
+              path="/thesession/tune/:tuneId"
+              element={<SessionDetailsPage />}
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Box>

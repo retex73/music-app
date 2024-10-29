@@ -18,6 +18,7 @@ import {
 import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useNavigate } from "react-router-dom";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -30,6 +31,8 @@ const TheSessionPage = () => {
     const saved = localStorage.getItem("sessionfavourites");
     return saved ? JSON.parse(saved) : [];
   });
+
+  const navigate = useNavigate();
 
   const debouncedFetch = useCallback(async (searchTerm) => {
     if (!searchTerm) {
@@ -140,6 +143,7 @@ const TheSessionPage = () => {
                         cursor: "pointer",
                       },
                     }}
+                    onClick={() => navigate(`/thesession/tune/${tune.id}`)}
                   >
                     <CardContent
                       sx={{
