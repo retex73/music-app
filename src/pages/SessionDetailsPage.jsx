@@ -24,16 +24,38 @@ const SessionDetailsPage = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Convert tuneId to string for consistent comparison
+  const isFavorite = favorites.includes(String(tuneId));
+
   const handleToggleFavorite = useCallback(() => {
     setFavorites((prevFavorites) => {
-      const newFavorites = prevFavorites.includes(tuneId)
-        ? prevFavorites.filter((id) => id !== tuneId)
-        : [...prevFavorites, tuneId];
+      const tuneIdString = String(tuneId);
+      let newFavorites;
+      if (prevFavorites.includes(tuneIdString)) {
+        // Remove from favorites
+        newFavorites = prevFavorites.filter((id) => id !== tuneIdString);
+      } else {
+        // Add to favorites (prevent duplicates)
+        newFavorites = [...prevFavorites, tuneIdString];
+      }
 
       localStorage.setItem("sessionfavourites", JSON.stringify(newFavorites));
       return newFavorites;
     });
   }, [tuneId]);
+
+  // Listen for localStorage changes from other components
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === "sessionfavourites") {
+        const newFavorites = e.newValue ? JSON.parse(e.newValue) : [];
+        setFavorites(newFavorites);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   useEffect(() => {
     const fetchTuneDetails = async () => {
@@ -90,7 +112,7 @@ const SessionDetailsPage = () => {
 
         <TuneSummaryCard
           tune={tune}
-          isFavorite={favorites.includes(tuneId)}
+          isFavorite={isFavorite}
           onToggleFavorite={handleToggleFavorite}
         />
 

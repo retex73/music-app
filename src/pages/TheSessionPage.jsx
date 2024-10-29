@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import debounce from "lodash/debounce";
 import TheSessionSearchBar from "../components/TheSessionSearchBar";
 import {
@@ -74,13 +74,32 @@ const TheSessionPage = () => {
 
   const handleToggleFavorite = useCallback((tuneId) => {
     setFavorites((prevFavorites) => {
-      const newFavorites = prevFavorites.includes(tuneId)
-        ? prevFavorites.filter((id) => id !== tuneId)
-        : [...prevFavorites, tuneId];
+      const tuneIdString = String(tuneId);
+      let newFavorites;
+      if (prevFavorites.includes(tuneIdString)) {
+        // Remove from favorites
+        newFavorites = prevFavorites.filter((id) => id !== tuneIdString);
+      } else {
+        // Add to favorites (prevent duplicates)
+        newFavorites = [...prevFavorites, tuneIdString];
+      }
 
       localStorage.setItem("sessionfavourites", JSON.stringify(newFavorites));
       return newFavorites;
     });
+  }, []);
+
+  // Listen for localStorage changes from other components
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === "sessionfavourites") {
+        const newFavorites = e.newValue ? JSON.parse(e.newValue) : [];
+        setFavorites(newFavorites);
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
   // Calculate pagination values
@@ -197,10 +216,10 @@ const TheSessionPage = () => {
                         <IconButton
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleToggleFavorite(tune.id);
+                            handleToggleFavorite(String(tune.id));
                           }}
                           sx={{
-                            color: favorites.includes(tune.id)
+                            color: favorites.includes(String(tune.id))
                               ? "error.main"
                               : "inherit",
                             "&:hover": {
@@ -208,7 +227,7 @@ const TheSessionPage = () => {
                             },
                           }}
                         >
-                          {favorites.includes(tune.id) ? (
+                          {favorites.includes(String(tune.id)) ? (
                             <FavoriteIcon />
                           ) : (
                             <FavoriteBorderIcon />
