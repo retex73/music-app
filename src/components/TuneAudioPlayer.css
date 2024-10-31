@@ -1,0 +1,193 @@
+/* Import the base abcjs audio styles */
+@import 'abcjs/abcjs-audio.css';
+
+.abcjs-audio-container .abcjs-inline-audio {
+  height: auto !important;
+  margin: 8px 0;
+  display: grid !important;
+  grid-template-areas:
+    "controls sheet-music"
+    "tempo repeat" !important;
+  grid-template-columns: auto 1fr !important;
+  gap: 8px 16px !important;
+  align-items: center;
+  padding: 8px !important;
+}
+
+/* Play controls group */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-play-controls {
+  grid-area: controls;
+  display: flex;
+  gap: 4px;
+}
+
+/* Progress bar group */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-progress-controls {
+  grid-area: tempo;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+}
+
+/* Style the built-in warp control */
+.abcjs-audio-container .abcjs-warp-canvas {
+  display: flex !important;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  margin-top: 8px;
+}
+
+/* Style the warp slider input */
+.abcjs-audio-container input[type='range'].abcjs-warp-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.4);
+}
+
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.4);
+}
+
+/* Progress bar styling */
+.abcjs-audio-container .abcjs-midi-progress-background {
+  background: rgba(255, 255, 255, 0.04) !important;
+  height: 10px !important;
+  border-radius: 12px !important;
+  margin: 0 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  position: relative !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-indicator {
+  background: #FF6B35 !important;
+  height: 100% !important;
+  border-radius: 12px !important;
+  transition: width 0.1s linear !important;
+}
+
+/* Handle (thumb) styling */
+.abcjs-audio-container .abcjs-midi-progress-background input[type='range'] {
+  -webkit-appearance: none !important;
+  width: 100% !important;
+  height: 10px !important;
+  background: transparent !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-background input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #FF6B35 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+  margin-top: -3px !important;
+}
+
+.abcjs-midi-progress-background input[type='range']::-moz-range-thumb {
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #FF6B35 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Style the control buttons to match MUI dark theme */
+.abcjs-audio-container .abcjs-inline-audio button {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  margin: 0 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  color: #FFFFFF;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.abcjs-audio-container .abcjs-inline-audio button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Remove focus outline */
+.abcjs-midi-progress-background input[type='range']:focus {
+  outline: none;
+}
+
+/* Hover state for the handle */
+.abcjs-midi-progress-background input[type='range']:hover::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+.abcjs-midi-progress-background input[type='range']:hover::-moz-range-thumb {
+  transform: scale(1.1);
+}
+
+/* Disabled state */
+.abcjs-inline-audio.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Time display */
+.abcjs-midi-clock {
+  color: rgba(255, 255, 255, 0.7); /* text.secondary color */
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+/* Selection and hover states */
+.abcjs-audio-container .abcjs-inline-audio button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.5); /* primary.main with opacity */
+}
+
+.abcjs-audio-container .abcjs-inline-audio button:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Cursor and highlighting styles */
+.abcjs-cursor {
+  stroke: red;
+  stroke-width: 2;
+}
+
+.highlight {
+  fill: #0a9ecc;
+}
+
+/* Click interaction */
+.abcjs-note {
+  cursor: pointer;
+}

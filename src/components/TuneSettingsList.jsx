@@ -1,9 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography, Card, CardContent, Stack } from "@mui/material";
 import abcjs from "abcjs";
+import TuneAudioPlayer from "./TuneAudioPlayer";
 
 const TuneSettingsList = ({ settings }) => {
+  const [visualObjs, setVisualObjs] = useState({});
+
   useEffect(() => {
+    const newVisualObjs = {};
+
     settings.forEach((setting) => {
       const completeAbc = `X:${setting.id}
 M:4/4
@@ -14,7 +19,7 @@ ${setting.abc}`;
       const container = document.getElementById(`paper-${setting.id}`);
       const containerWidth = container?.clientWidth || 800;
 
-      abcjs.renderAbc(`paper-${setting.id}`, completeAbc, {
+      const visualObj = abcjs.renderAbc(`paper-${setting.id}`, completeAbc, {
         scale: 1.5,
         staffwidth: Math.min(containerWidth - 40, 800),
         wrap: {
@@ -29,8 +34,13 @@ ${setting.abc}`;
           gchordfont: "Arial 16px",
           vocalfont: "Arial 16px",
         },
-      });
+        add_classes: true,
+      })[0];
+
+      newVisualObjs[setting.id] = visualObj;
     });
+
+    setVisualObjs(newVisualObjs);
   }, [settings]);
 
   return (
@@ -77,6 +87,10 @@ ${setting.abc}`;
                     justifyContent: "center",
                     alignItems: "center",
                   }}
+                />
+                <TuneAudioPlayer
+                  visualObj={visualObjs[setting.id]}
+                  settingId={setting.id}
                 />
               </Stack>
             </CardContent>
