@@ -176,3 +176,18 @@
 .abcjs-audio-container .abcjs-inline-audio button:active {
   background: rgba(255, 255, 255, 0.12);
 }
+
+/* Cursor and highlighting styles */
+.abcjs-cursor {
+  stroke: red;
+  stroke-width: 2;
+}
+
+.highlight {
+  fill: #0a9ecc;
+}
+
+/* Click interaction */
+.abcjs-note {
+  cursor: pointer;
+}
