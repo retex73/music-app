@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Button, CircularProgress, Slider } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import abcjs from "abcjs";
 // Import Font Awesome for the audio control icons
 import "abcjs/abcjs-audio.css";
@@ -22,7 +22,6 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
   const midiBufferRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [tempo, setTempo] = useState(100);
 
   useEffect(() => {
     // Cleanup function
@@ -33,13 +32,6 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
       }
     };
   }, []);
-
-  const handleTempoChange = (event, newValue) => {
-    setTempo(newValue);
-    if (synthControlRef.current) {
-      synthControlRef.current.setWarp(newValue / 100);
-    }
-  };
 
   const activateAudio = async () => {
     if (!visualObj || !abcjs.synth.supportsAudio()) {
@@ -56,15 +48,19 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
         displayRestart: true,
         displayPlay: true,
         displayProgress: true,
-        displayWarp: false,
-        displayClock: false,
-        displayTempo: false,
+        displayWarp: true,
+        displayClock: true,
+        displayTempo: true,
+        warpSlider: true,
+        warpSliderMin: 50,
+        warpSliderMax: 200,
+        warpSliderStep: 1,
+        warpSliderValue: 100,
       });
 
       midiBufferRef.current = new abcjs.synth.CreateSynth();
       await midiBufferRef.current.init({
         visualObj: visualObj,
-        millisecondsPerMeasure: 800,
         options: {
           soundFontUrl: "https://paulrosen.github.io/midi-js-soundfonts/abcjs/",
           program: 0,
@@ -103,45 +99,6 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
         </Button>
       )}
       <div id={`audio-${settingId}`} className="abcjs-audio-container" />
-      {isReady && (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 2,
-            mt: 2,
-            px: 2,
-          }}
-        >
-          <Box
-            sx={{
-              color: "text.secondary",
-              fontWeight: "bold",
-              minWidth: 60,
-            }}
-          >
-            TEMPO
-          </Box>
-          <Slider
-            value={tempo}
-            onChange={handleTempoChange}
-            min={50}
-            max={200}
-            sx={{
-              "& .MuiSlider-thumb": {
-                width: 16,
-                height: 16,
-                "&:before": {
-                  boxShadow: "0 2px 12px 0 rgba(0,0,0,0.4)",
-                },
-              },
-              "& .MuiSlider-rail": {
-                opacity: 0.3,
-              },
-            }}
-          />
-        </Box>
-      )}
     </Box>
   );
 };
