@@ -11,6 +11,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import darkTheme from "./theme/darkTheme";
 import NavBar from "./components/NavBar";
 import { Box } from "@mui/material";
+import TheSessionTuneDetailsPage from "./pages/TheSessionTuneDetailsPage";
 
 function App() {
   return (
@@ -32,7 +33,7 @@ function App() {
             <Route path="/thesession" element={<TheSessionPage />} />
             <Route
               path="/thesession/tune/:tuneId"
-              element={<SessionDetailsPage />}
+              element={<TheSessionTuneDetailsPage />}
             />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
