@@ -14,6 +14,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import TuneSettingsList from "../components/TuneSettingsList";
 
 function TheSessionTuneDetailsPage() {
   const { tuneId } = useParams();
@@ -25,7 +26,17 @@ function TheSessionTuneDetailsPage() {
     const fetchTune = async () => {
       try {
         const tuneSettings = await getSessionTuneById(tuneId);
-        setSettings(tuneSettings);
+        const formattedSettings = tuneSettings.map((setting) => ({
+          id: setting.setting_id,
+          key: setting.mode,
+          abc: setting.abc,
+          date: setting.date,
+          username: setting.username,
+          name: setting.name,
+          type: setting.type,
+          meter: setting.meter,
+        }));
+        setSettings(formattedSettings);
       } catch (error) {
         console.error("Error fetching tune details:", error);
       }
@@ -37,7 +48,6 @@ function TheSessionTuneDetailsPage() {
   }, [tuneId]);
 
   useEffect(() => {
-    // Check if the tune is already a favorite
     const favorites =
       JSON.parse(localStorage.getItem("sessionfavourites")) || [];
     setIsFavorite(favorites.includes(tuneId));
@@ -67,7 +77,7 @@ function TheSessionTuneDetailsPage() {
     );
   }
 
-  const firstSetting = settings[0]; // Use first setting for basic tune info
+  const firstSetting = settings[0];
 
   return (
     <Box sx={{ p: 3, maxWidth: "800px", mx: "auto" }}>
@@ -110,29 +120,7 @@ function TheSessionTuneDetailsPage() {
             <Chip label={firstSetting.mode} />
           </Stack>
 
-          {settings.map((setting, index) => (
-            <Box key={setting.setting_id} sx={{ mt: 3 }}>
-              <Typography variant="h6" gutterBottom>
-                Setting {index + 1}
-              </Typography>
-              <Typography
-                component="pre"
-                sx={{
-                  whiteSpace: "pre-wrap",
-                  fontFamily: "monospace",
-                  bgcolor: "background.paper",
-                  p: 2,
-                  borderRadius: 1,
-                }}
-              >
-                {setting.abc}
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                Added by {setting.username} on{" "}
-                {new Date(setting.date).toLocaleDateString()}
-              </Typography>
-            </Box>
-          ))}
+          <TuneSettingsList settings={settings} />
         </CardContent>
       </Card>
     </Box>

@@ -59,6 +59,8 @@ ${setting.abc}`;
                 height: "auto",
                 minHeight: "200px",
                 display: "block",
+                overflow: "visible",
+                marginBottom: "20px",
               },
             }}
           >
@@ -69,7 +71,7 @@ ${setting.abc}`;
                     Key: {setting.key}
                   </Typography>
                   <Typography variant="subtitle2" color="text.secondary">
-                    Added by: {setting.member.name} on{" "}
+                    Added by: {setting.username} on{" "}
                     {new Date(setting.date).toLocaleDateString()}
                   </Typography>
                 </Box>
@@ -82,10 +84,12 @@ ${setting.abc}`;
                     overflowX: "auto",
                     width: "100%",
                     contain: "layout paint",
-                    minHeight: "200px",
+                    minHeight: "300px",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    overflowY: "visible",
+                    marginBottom: "20px",
                   }}
                 />
                 <TuneAudioPlayer
