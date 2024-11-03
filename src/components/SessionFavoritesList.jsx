@@ -27,7 +27,9 @@ function SessionFavoritesList() {
       try {
         // Fetch full details for each favorite tune using the API
         const tunesPromises = favorites.map((id) => getSessionTuneById(id));
-        const tunes = await Promise.all(tunesPromises);
+        const tunesArrays = await Promise.all(tunesPromises);
+        // Take the first setting of each tune
+        const tunes = tunesArrays.map((settings) => settings[0]);
         setFavoriteTunes(tunes);
       } catch (error) {
         console.error("Error fetching favorite tunes:", error);
@@ -71,11 +73,14 @@ function SessionFavoritesList() {
         Favorite Session Tunes
       </Typography>
       <List>
-        {favoriteTunes.map((tune) => (
-          <ListItem key={tune.id} disablePadding>
+        {favoriteTunes.map((tune, index) => (
+          <ListItem
+            key={tune.tune_id ? String(tune.tune_id) : `tune-${index}`}
+            disablePadding
+          >
             <ListItemButton
               component={Link}
-              to={`/thesession/tune/${tune.id}`}
+              to={`/thesession/tune/${tune.tune_id}`}
               sx={{
                 "&:hover": {
                   backgroundColor: "rgba(255, 255, 255, 0.08)",

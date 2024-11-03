@@ -169,7 +169,7 @@ const TheSessionPage = () => {
             <Box sx={{ p: 3, maxWidth: "900px", mx: "auto" }}>
               <Grid container spacing={2}>
                 {paginatedTunes.map((tune) => (
-                  <Grid item xs={12} key={tune.id}>
+                  <Grid item xs={12} key={tune.tune_id}>
                     <Card
                       sx={{
                         height: "100%",
@@ -245,10 +245,10 @@ const TheSessionPage = () => {
                           <IconButton
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleToggleFavorite(String(tune.id));
+                              handleToggleFavorite(String(tune.tune_id));
                             }}
                             sx={{
-                              color: favorites.includes(String(tune.id))
+                              color: favorites.includes(String(tune.tune_id))
                                 ? "error.main"
                                 : "inherit",
                               "&:hover": {
@@ -256,7 +256,7 @@ const TheSessionPage = () => {
                               },
                             }}
                           >
-                            {favorites.includes(String(tune.id)) ? (
+                            {favorites.includes(String(tune.tune_id)) ? (
                               <FavoriteIcon />
                             ) : (
                               <FavoriteBorderIcon />
