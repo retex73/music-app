@@ -33,17 +33,13 @@ const TheSessionPage = () => {
     const saved = localStorage.getItem("sessionfavourites");
     return saved ? JSON.parse(saved) : [];
   });
-  const [searchQuery, setSearchQuery] = useState(() => {
-    return localStorage.getItem("lastSessionSearch") || "";
-  });
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
   const debouncedFetch = useCallback(async (searchTerm) => {
     if (!searchTerm) {
       setTunes([]);
-      localStorage.removeItem("lastSessionSearch");
-      localStorage.removeItem("lastSessionResults");
       return;
     }
 
@@ -52,8 +48,6 @@ const TheSessionPage = () => {
     try {
       const tunes = await searchSessionTunes(searchTerm);
       setTunes(tunes);
-      localStorage.setItem("lastSessionSearch", searchTerm);
-      localStorage.setItem("lastSessionResults", JSON.stringify(tunes));
     } catch (err) {
       setError(err.message);
       setTunes([]);
@@ -115,16 +109,6 @@ const TheSessionPage = () => {
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const paginatedTunes = tunes.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  useEffect(() => {
-    const lastSearch = localStorage.getItem("lastSessionSearch");
-    const lastResults = localStorage.getItem("lastSessionResults");
-
-    if (lastSearch && lastResults) {
-      setSearchQuery(lastSearch);
-      setTunes(JSON.parse(lastResults));
-    }
-  }, []);
-
   return (
     <Container maxWidth="md">
       <Box
@@ -169,7 +153,7 @@ const TheSessionPage = () => {
             <Box sx={{ p: 3, maxWidth: "900px", mx: "auto" }}>
               <Grid container spacing={2}>
                 {paginatedTunes.map((tune) => (
-                  <Grid item xs={12} key={tune.id}>
+                  <Grid item xs={12} key={tune.tune_id}>
                     <Card
                       sx={{
                         height: "100%",
@@ -245,10 +229,10 @@ const TheSessionPage = () => {
                           <IconButton
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleToggleFavorite(String(tune.id));
+                              handleToggleFavorite(String(tune.tune_id));
                             }}
                             sx={{
-                              color: favorites.includes(String(tune.id))
+                              color: favorites.includes(String(tune.tune_id))
                                 ? "error.main"
                                 : "inherit",
                               "&:hover": {
@@ -256,7 +240,7 @@ const TheSessionPage = () => {
                               },
                             }}
                           >
-                            {favorites.includes(String(tune.id)) ? (
+                            {favorites.includes(String(tune.tune_id)) ? (
                               <FavoriteIcon />
                             ) : (
                               <FavoriteBorderIcon />
