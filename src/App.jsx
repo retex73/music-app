@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 import TuneDetailsPage from "./pages/TuneDetailsPage";
 import TheSessionPage from "./pages/TheSessionPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import SessionDetailsPage from "./pages/SessionDetailsPage";
+
 import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
