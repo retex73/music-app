@@ -1,50 +1,61 @@
-import { getCachedData, setCachedData } from "../utils/cacheUtils";
+import Papa from "papaparse";
 
-const BASE_URL = "https://thesession.org";
+let tunesData = null;
 
-export const getSessionTuneById = async (tuneId) => {
-  const cacheKey = `tune_${tuneId}`;
-  const cachedData = getCachedData(cacheKey);
-
-  if (cachedData) {
-    return cachedData;
-  }
-
+export const initializeSessionData = async () => {
   try {
-    const response = await fetch(`${BASE_URL}/tunes/${tuneId}?format=json`);
-    if (!response.ok) {
-      throw new Error("Failed to fetch tune details");
-    }
-    const data = await response.json();
-    setCachedData(cacheKey, data);
-    return data;
+    const response = await fetch("/data/session_tunes_data.csv");
+    const csvText = await response.text();
+
+    const results = Papa.parse(csvText, {
+      header: true,
+      skipEmptyLines: true,
+    });
+
+    tunesData = results.data;
+    return tunesData;
   } catch (error) {
-    console.error("Error fetching session tune details:", error);
-    throw error;
+    console.error("Error loading session tunes data:", error);
+    return [];
   }
 };
 
-export const searchSessionTunes = async (searchTerm) => {
-  const cacheKey = `search_${searchTerm.toLowerCase().trim()}`;
-  const cachedData = getCachedData(cacheKey);
-
-  if (cachedData) {
-    return cachedData;
+export const searchSessionTunes = async (query) => {
+  if (!tunesData) {
+    await initializeSessionData();
   }
 
-  try {
-    const response = await fetch(
-      `${BASE_URL}/tunes/search?q=${searchTerm}&format=json`
-    );
-    if (!response.ok) {
-      throw new Error("Failed to fetch tunes");
+  if (!query) return [];
+
+  // Case insensitive search on name field
+  const results = tunesData.filter((tune) =>
+    tune.name.toLowerCase().includes(query.toLowerCase())
+  );
+
+  // Group by tune_id and take first setting
+  const uniqueTunes = results.reduce((acc, tune) => {
+    if (!acc[tune.tune_id]) {
+      acc[tune.tune_id] = tune;
     }
-    const data = await response.json();
-    const tunes = data.tunes || [];
-    setCachedData(cacheKey, tunes);
-    return tunes;
-  } catch (error) {
-    console.error("Error searching session tunes:", error);
-    throw error;
+    return acc;
+  }, {});
+
+  return Object.values(uniqueTunes);
+};
+
+export const getSessionTuneById = async (tuneId) => {
+  if (!tunesData) {
+    await initializeSessionData();
   }
+
+  // Find all settings for this tune_id
+  const settings = tunesData.filter(
+    (tune) => tune.tune_id === tuneId.toString()
+  );
+
+  if (!settings.length) {
+    throw new Error(`Tune with ID ${tuneId} not found`);
+  }
+
+  return settings;
 };

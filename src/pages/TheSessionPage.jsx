@@ -184,7 +184,7 @@ const TheSessionPage = () => {
                         },
                       }}
                       onClick={() =>
-                        navigate(`/thesession/tune/${tune.id}`, {
+                        navigate(`/thesession/tune/${tune.tune_id}`, {
                           state: { fromSearch: true },
                         })
                       }
