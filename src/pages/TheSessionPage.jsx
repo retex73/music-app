@@ -33,17 +33,13 @@ const TheSessionPage = () => {
     const saved = localStorage.getItem("sessionfavourites");
     return saved ? JSON.parse(saved) : [];
   });
-  const [searchQuery, setSearchQuery] = useState(() => {
-    return localStorage.getItem("lastSessionSearch") || "";
-  });
+  const [searchQuery, setSearchQuery] = useState("");
 
   const navigate = useNavigate();
 
   const debouncedFetch = useCallback(async (searchTerm) => {
     if (!searchTerm) {
       setTunes([]);
-      localStorage.removeItem("lastSessionSearch");
-      localStorage.removeItem("lastSessionResults");
       return;
     }
 
@@ -52,8 +48,6 @@ const TheSessionPage = () => {
     try {
       const tunes = await searchSessionTunes(searchTerm);
       setTunes(tunes);
-      localStorage.setItem("lastSessionSearch", searchTerm);
-      localStorage.setItem("lastSessionResults", JSON.stringify(tunes));
     } catch (err) {
       setError(err.message);
       setTunes([]);
@@ -114,16 +108,6 @@ const TheSessionPage = () => {
   const totalPages = Math.ceil(tunes.length / ITEMS_PER_PAGE);
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
   const paginatedTunes = tunes.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  useEffect(() => {
-    const lastSearch = localStorage.getItem("lastSessionSearch");
-    const lastResults = localStorage.getItem("lastSessionResults");
-
-    if (lastSearch && lastResults) {
-      setSearchQuery(lastSearch);
-      setTunes(JSON.parse(lastResults));
-    }
-  }, []);
 
   return (
     <Container maxWidth="md">
