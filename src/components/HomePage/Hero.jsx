@@ -1,13 +1,11 @@
 import React from "react";
-import { Typography, Box, Button, useTheme } from "@mui/material";
+import { Typography, Box, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { Link as RouterLink } from "react-router-dom";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 
 const Hero = () => {
-  const theme = useTheme();
-
   return (
     <Box
       sx={{

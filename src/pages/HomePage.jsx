@@ -1,8 +1,8 @@
 import React from "react";
 import { Container, Box } from "@mui/material";
-import Hero from "../components/Hero/Hero";
-import FavoritesSection from "../components/FavoritesSection/FavoritesSection";
-import Footer from "../components/Footer/Footer";
+import Hero from "../components/HomePage/Hero";
+import FavoritesSection from "../components/HomePage/FavoritesSection";
+import Footer from "../components/HomePage/Footer";
 
 const HomePage = () => {
   return (
