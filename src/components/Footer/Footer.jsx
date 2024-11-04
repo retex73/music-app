@@ -6,8 +6,9 @@ import {
   Container,
   Stack,
   IconButton,
-  Grid,
 } from "@mui/material";
+
+import Grid from "@mui/material/Grid2";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import EmailIcon from "@mui/icons-material/Email";
@@ -72,22 +73,22 @@ const Footer = () => {
             justifyContent="center"
             sx={{ maxWidth: { xs: "100%", md: "60%" } }}
           >
-            <Grid item>
+            <Grid xs={12} sm={3}>
               <Button href="/about" color="inherit" size="small">
                 About
               </Button>
             </Grid>
-            <Grid item>
+            <Grid xs={12} sm={3}>
               <Button href="/privacy" color="inherit" size="small">
                 Privacy
               </Button>
             </Grid>
-            <Grid item>
+            <Grid xs={12} sm={3}>
               <Button href="/terms" color="inherit" size="small">
                 Terms
               </Button>
             </Grid>
-            <Grid item>
+            <Grid xs={12} sm={3}>
               <Button href="/contact" color="inherit" size="small">
                 Contact
               </Button>

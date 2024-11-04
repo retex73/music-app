@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Box, Grid, Button, useTheme } from "@mui/material";
+import { Typography, Box, Button, useTheme } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { Link as RouterLink } from "react-router-dom";
 import MusicNoteIcon from "@mui/icons-material/MusicNote";
 import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
@@ -13,17 +14,13 @@ const Hero = () => {
         textAlign: "center",
         mb: 8,
         position: "relative",
-        "&::before": {
-          content: '""',
-          position: "absolute",
-          top: -40,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "150%",
-          height: "100%",
-          background: `radial-gradient(circle, ${theme.palette.primary.main}22 0%, transparent 70%)`,
-          zIndex: -1,
-        },
+        padding: "4rem 1rem",
+        backgroundImage: 'url("/images/hero-image.jpg")',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+        backgroundBlendMode: "overlay",
       }}
     >
       <Typography
@@ -32,15 +29,72 @@ const Hero = () => {
         gutterBottom
         sx={{
           fontWeight: 700,
-          background: `linear-gradient(120deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
+          fontSize: { xs: "2.5rem", md: "3.5rem" },
+          color: "white",
+          textShadow: "2px 2px 4px rgba(0, 0, 0, 0.7)",
           mb: 3,
         }}
       >
         Discover Irish Whistle Tunes
       </Typography>
-      {/* ... rest of hero content ... */}
+
+      <Typography
+        variant="h5"
+        color="text.secondary"
+        sx={{
+          mb: 6,
+          maxWidth: "800px",
+          mx: "auto",
+          color: "white",
+          textShadow: "1px 1px 3px rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        Explore our collection of traditional Irish music, from jigs and reels
+        to hornpipes and airs
+      </Typography>
+
+      <Grid container spacing={4} justifyContent="center" sx={{ mb: 6 }}>
+        <Grid xs="auto">
+          <Button
+            component={RouterLink}
+            to="/hatao"
+            variant="contained"
+            size="large"
+            startIcon={<MusicNoteIcon />}
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1.1rem",
+              "&:hover": {
+                transform: "translateY(-2px)",
+              },
+            }}
+          >
+            Hatao's Tune a Day
+          </Button>
+        </Grid>
+        <Grid xs="auto">
+          <Button
+            component={RouterLink}
+            to="/thesession"
+            variant="outlined"
+            size="large"
+            startIcon={<LibraryMusicIcon />}
+            sx={{
+              px: 4,
+              py: 1.5,
+              fontSize: "1.1rem",
+              borderWidth: 2,
+              "&:hover": {
+                borderWidth: 2,
+                transform: "translateY(-2px)",
+              },
+            }}
+          >
+            Browse The Session
+          </Button>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
