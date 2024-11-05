@@ -59,3 +59,26 @@ export const getSessionTuneById = async (tuneId) => {
 
   return settings;
 };
+
+export const getRandomTunes = async (count = 3) => {
+  if (!tunesData) {
+    await initializeSessionData();
+  }
+
+  // Create a map to store unique tunes by tune_id
+  const uniqueTunes = new Map();
+
+  // First pass to group by tune_id and take first setting
+  tunesData.forEach((tune) => {
+    if (!uniqueTunes.has(tune.tune_id)) {
+      uniqueTunes.set(tune.tune_id, tune);
+    }
+  });
+
+  // Convert to array and shuffle
+  const allTunes = Array.from(uniqueTunes.values());
+  const shuffled = allTunes.sort(() => 0.5 - Math.random());
+
+  // Return requested number of tunes
+  return shuffled.slice(0, count);
+};

@@ -14,7 +14,7 @@ import {
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import TuneSettingsList from "../components/TuneSettingsList";
+import TuneSettingsList from "../components/TheSessionTuneDetailsPage/TuneSettingsList";
 
 function TheSessionTuneDetailsPage() {
   const { tuneId } = useParams();
