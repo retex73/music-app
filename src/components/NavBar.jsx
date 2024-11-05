@@ -35,7 +35,7 @@ const NavBar = () => {
           IrishWhistleTunes
         </LogoText>
         <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-          <NavButton component={RouterLink} to="/">
+          <NavButton component={RouterLink} to="/hatao">
             Hatao's Tune a Day
           </NavButton>
           <NavButton component={RouterLink} to="/thesession">

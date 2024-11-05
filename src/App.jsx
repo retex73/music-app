@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 import TuneDetailsPage from "./pages/TuneDetailsPage";
 import TheSessionPage from "./pages/TheSessionPage";
 import NotFoundPage from "./pages/NotFoundPage";
-
+import HataoPage from "./pages/HataoPage";
 import "./App.css";
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -29,6 +29,7 @@ function App() {
         <Box component="main" sx={{ flexGrow: 1 }}>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/hatao" element={<HataoPage />} />
             <Route path="/tune/:tuneId" element={<TuneDetailsPage />} />
             <Route path="/thesession" element={<TheSessionPage />} />
             <Route
