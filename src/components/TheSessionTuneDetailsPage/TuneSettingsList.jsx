@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { Box, Typography, Card, CardContent, Stack } from "@mui/material";
 import abcjs from "abcjs";
 import TuneAudioPlayer from "../TuneAudioPlayer";
+import SheetMusicModal from "./SheetMusicModal";
 
 const TuneSettingsList = ({ settings }) => {
   const [visualObjs, setVisualObjs] = useState({});
+  const [selectedSetting, setSelectedSetting] = useState(null);
 
   useEffect(() => {
     const newVisualObjs = {};
@@ -43,6 +45,39 @@ ${setting.abc}`;
     setVisualObjs(newVisualObjs);
   }, [settings]);
 
+  const handleModalToggle = (settingId) => {
+    setSelectedSetting(settingId);
+
+    if (settingId) {
+      setTimeout(() => {
+        const setting = settings.find((s) => s.id === settingId);
+        const completeAbc = `X:${setting.id}
+M:4/4
+L:1/8
+K:${setting.key.replace("major", "").replace("minor", "m")}
+${setting.abc}`;
+
+        abcjs.renderAbc(`modal-paper-${setting.id}`, completeAbc, {
+          scale: 2.0,
+          staffwidth: 900,
+          wrap: {
+            minSpacing: 1.8,
+            maxSpacing: 2.7,
+            preferredMeasuresPerLine: 4,
+          },
+          paddingright: 20,
+          paddingleft: 20,
+          format: {
+            headerfont: "Arial 18px",
+            gchordfont: "Arial 18px",
+            vocalfont: "Arial 18px",
+          },
+          add_classes: true,
+        });
+      }, 100);
+    }
+  };
+
   return (
     <Box sx={{ mt: 4 }}>
       <Stack spacing={2}>
@@ -77,7 +112,9 @@ ${setting.abc}`;
                 </Box>
                 <div
                   id={`paper-${setting.id}`}
+                  onClick={() => handleModalToggle(setting.id)}
                   style={{
+                    cursor: "pointer",
                     backgroundColor: "#FFFFFF",
                     color: "#000000",
                     padding: "20px",
@@ -101,6 +138,12 @@ ${setting.abc}`;
           </Card>
         ))}
       </Stack>
+
+      <SheetMusicModal
+        open={Boolean(selectedSetting)}
+        onClose={() => handleModalToggle(null)}
+        selectedSetting={selectedSetting}
+      />
     </Box>
   );
 };
