@@ -17,11 +17,7 @@ const Footer = () => {
   return (
     <Paper
       sx={{
-        mt: "auto",
         width: "100%",
-        position: "fixed",
-        bottom: 0,
-        left: 0,
         backgroundColor: "background.default",
         borderTop: 1,
         borderColor: "divider",

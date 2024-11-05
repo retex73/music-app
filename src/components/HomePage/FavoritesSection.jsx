@@ -1,5 +1,6 @@
 import React from "react";
-import { Typography, Paper, Grid, useTheme } from "@mui/material";
+import { Typography, Paper, useTheme } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import FavoriteTunesList from "../FavoriteTunesList";
 import SessionFavoritesList from "../SessionFavoritesList";
 
@@ -11,10 +12,6 @@ const FavoritesSection = () => {
       elevation={0}
       sx={{
         p: 4,
-        borderRadius: 4,
-        background: `linear-gradient(145deg, ${theme.palette.background.paper}, ${theme.palette.background.paper}99)`,
-        backdropFilter: "blur(10px)",
-        border: `1px solid ${theme.palette.divider}`,
       }}
     >
       <Typography
@@ -28,11 +25,41 @@ const FavoritesSection = () => {
       >
         Your Favorite Tunes
       </Typography>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
+      <Grid
+        container
+        spacing={4}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          width: "100%",
+        }}
+      >
+        <Grid
+          xs={12}
+          md={6}
+          sx={{
+            display: "flex",
+            justifyContent: "center", // Center the content horizontally
+            "& > *": {
+              width: "100%",
+              maxWidth: "600px", // Optional: prevents lists from getting too wide
+            },
+          }}
+        >
           <FavoriteTunesList />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid
+          xs={12}
+          md={6}
+          sx={{
+            display: "flex",
+            justifyContent: "center", // Center the content horizontally
+            "& > *": {
+              width: "100%",
+              maxWidth: "600px", // Optional: prevents lists from getting too wide
+            },
+          }}
+        >
           <SessionFavoritesList />
         </Grid>
       </Grid>

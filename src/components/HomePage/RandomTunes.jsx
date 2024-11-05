@@ -40,12 +40,6 @@ const RandomTunes = () => {
       elevation={0}
       sx={{
         p: 3,
-        borderRadius: 4,
-        background: `linear-gradient(145deg, ${theme.palette.background.paper}, ${theme.palette.background.paper}99)`,
-        backdropFilter: "blur(10px)",
-        border: `1px solid ${theme.palette.divider}`,
-        maxHeight: "400px",
-        overflow: "auto",
       }}
     >
       <Typography
@@ -53,8 +47,10 @@ const RandomTunes = () => {
         gutterBottom
         sx={{
           textAlign: "center",
-          mb: 2,
+          mb: 3,
           color: theme.palette.primary.main,
+          fontWeight: 600,
+          letterSpacing: "0.5px",
         }}
       >
         Random Tunes
@@ -62,17 +58,31 @@ const RandomTunes = () => {
 
       {loading ? (
         <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-          <CircularProgress size={24} />
+          <CircularProgress
+            size={28}
+            sx={{ color: theme.palette.primary.main }}
+          />
         </Box>
       ) : (
-        <Stack spacing={2}>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            gap: 2,
+          }}
+        >
           {tunes.map((tune) => (
             <Card
               key={tune.tune_id}
               sx={{
-                transition: "transform 0.2s ease-in-out",
+                background: `linear-gradient(135deg, ${theme.palette.background.paper} 0%, rgba(20, 20, 25, 0.9) 100%)`,
+                borderRadius: "5px",
+                transition: "all 0.3s ease-in-out",
+                border: `1px solid ${theme.palette.divider}`,
                 "&:hover": {
                   transform: "translateY(-4px)",
+                  boxShadow: `0 8px 24px -4px rgba(0, 0, 0, 0.3)`,
+                  borderColor: theme.palette.primary.main,
                 },
               }}
             >
@@ -82,26 +92,34 @@ const RandomTunes = () => {
                   component={Link}
                   to={`/thesession/tune/${tune.tune_id}`}
                   sx={{
-                    color: "primary.main",
+                    color: theme.palette.primary.main,
                     textDecoration: "none",
+                    fontWeight: 500,
+                    fontSize: "1rem",
+                    display: "block",
+                    mb: 1,
                     "&:hover": {
-                      textDecoration: "underline",
+                      color: theme.palette.primary.light,
                     },
                   }}
                 >
                   {tune.name}
                 </Typography>
 
-                <Stack direction="row" spacing={1} sx={{ mt: 1, mb: 2 }}>
-                  <Chip
-                    label={tune.type}
-                    size="small"
-                    sx={{
-                      bgcolor: "background.paper",
-                      "&:hover": { bgcolor: "background.paper" },
-                    }}
-                  />
-                </Stack>
+                <Chip
+                  label={tune.type}
+                  size="small"
+                  sx={{
+                    bgcolor: "rgba(255, 255, 255, 0.04)",
+                    color: theme.palette.text.secondary,
+                    borderRadius: "6px",
+                    height: "22px",
+                    "& .MuiChip-label": {
+                      px: 1.5,
+                      fontSize: "0.75rem",
+                    },
+                  }}
+                />
 
                 <Button
                   variant="outlined"
@@ -110,9 +128,14 @@ const RandomTunes = () => {
                   component={Link}
                   to={`/thesession/tune/${tune.tune_id}`}
                   sx={{
+                    mt: 2,
                     width: "100%",
+                    borderColor: theme.palette.primary.main,
+                    color: theme.palette.primary.main,
+                    transition: "all 0.2s ease-in-out",
                     "&:hover": {
-                      transform: "scale(1.02)",
+                      borderColor: theme.palette.primary.light,
+                      background: `linear-gradient(135deg, ${theme.palette.primary.main}20 0%, ${theme.palette.primary.main}10 100%)`,
                     },
                   }}
                 >
@@ -121,7 +144,7 @@ const RandomTunes = () => {
               </CardContent>
             </Card>
           ))}
-        </Stack>
+        </Box>
       )}
     </Paper>
   );
