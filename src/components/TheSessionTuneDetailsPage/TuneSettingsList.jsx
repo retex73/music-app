@@ -95,7 +95,7 @@ ${setting.abc}`;
                 minHeight: "200px",
                 display: "block",
                 overflow: "visible",
-                marginBottom: "20px",
+                marginBottom: "40px",
               },
             }}
           >
@@ -127,6 +127,7 @@ ${setting.abc}`;
                     alignItems: "center",
                     overflowY: "visible",
                     marginBottom: "20px",
+                    borderRadius: "20px",
                   }}
                 />
                 <TuneAudioPlayer

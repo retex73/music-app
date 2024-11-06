@@ -12,6 +12,7 @@ const TuneSetting = React.memo(({ setting, visualObj, onModalToggle }) => {
         backgroundColor: "#FFFFFF",
         foregroundColor: "#000000",
         contain: "layout paint",
+
         "&:hover": {
           backgroundColor: "#FFFFFF",
           transform: "none",
