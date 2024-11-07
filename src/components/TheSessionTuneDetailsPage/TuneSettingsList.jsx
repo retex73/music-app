@@ -99,10 +99,15 @@ ${setting.abc}`;
               },
             }}
           >
-            <CardContent sx={{ p: 3 }}>
+            <CardContent
+              sx={{
+                p: 3,
+                backgroundColor: "#FFFFFF",
+              }}
+            >
               <Stack spacing={2}>
                 <Box>
-                  <Typography variant="subtitle2" color="text.secondary">
+                  <Typography variant="subtitle2" color="text.primary">
                     Key: {setting.key}
                   </Typography>
                   <Typography variant="subtitle2" color="text.secondary">
