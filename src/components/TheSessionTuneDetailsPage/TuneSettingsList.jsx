@@ -3,10 +3,47 @@ import { Box, Typography, Card, CardContent, Stack } from "@mui/material";
 import abcjs from "abcjs";
 import TuneAudioPlayer from "../TuneAudioPlayer";
 import SheetMusicModal from "./SheetMusicModal";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensors,
+  useSensor,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-const TuneSettingsList = ({ settings }) => {
+const SortableCard = ({ setting, children, id }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  );
+};
+
+const TuneSettingsList = ({ settings, onReorder }) => {
   const [visualObjs, setVisualObjs] = useState({});
   const [selectedSetting, setSelectedSetting] = useState(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px movement required before drag starts
+      },
+    })
+  );
 
   useEffect(() => {
     const newVisualObjs = {};
@@ -78,72 +115,98 @@ ${setting.abc}`;
     }
   };
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = settings.findIndex((s) => s.id === active.id);
+      const newIndex = settings.findIndex((s) => s.id === over.id);
+      onReorder(oldIndex, newIndex);
+    }
+  };
+
   return (
     <Box sx={{ mt: 4 }}>
-      <Stack spacing={2}>
-        {settings.map((setting) => (
-          <Card
-            key={setting.id}
-            sx={{
-              width: "100%",
-              backgroundColor: "#FFFFFF",
-              foregroundColor: "#000000",
-              contain: "layout paint",
-              "& svg": {
-                maxWidth: "100%",
-                height: "auto",
-                minHeight: "200px",
-                display: "block",
-                overflow: "visible",
-                marginBottom: "40px",
-              },
-            }}
-          >
-            <CardContent
-              sx={{
-                p: 3,
-                backgroundColor: "#FFFFFF",
-              }}
-            >
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="subtitle2" color="text.primary">
-                    Key: {setting.key}
-                  </Typography>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Added by: {setting.username} on{" "}
-                    {new Date(setting.date).toLocaleDateString()}
-                  </Typography>
-                </Box>
-                <div
-                  id={`paper-${setting.id}`}
-                  onClick={() => handleModalToggle(setting.id)}
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor: "#FFFFFF",
-                    color: "#000000",
-                    padding: "20px",
-                    overflowX: "auto",
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={settings.map((s) => s.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <Stack spacing={2}>
+            {settings.map((setting) => (
+              <SortableCard key={setting.id} id={setting.id}>
+                <Card
+                  sx={{
                     width: "100%",
+                    backgroundColor: "#FFFFFF",
+                    foregroundColor: "#000000",
                     contain: "layout paint",
-                    minHeight: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    overflowY: "visible",
-                    marginBottom: "20px",
-                    borderRadius: "20px",
+                    "& svg": {
+                      maxWidth: "100%",
+                      height: "auto",
+                      minHeight: "200px",
+                      display: "block",
+                      overflow: "visible",
+                      marginBottom: "40px",
+                    },
+                    cursor: "grab",
+                    "&:active": {
+                      cursor: "grabbing",
+                    },
                   }}
-                />
-                <TuneAudioPlayer
-                  visualObj={visualObjs[setting.id]}
-                  settingId={setting.id}
-                />
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
-      </Stack>
+                >
+                  <CardContent
+                    sx={{
+                      p: 3,
+                      backgroundColor: "#FFFFFF",
+                    }}
+                  >
+                    <Stack spacing={2}>
+                      <Box>
+                        <Typography variant="subtitle2" color="text.primary">
+                          Key: {setting.key}
+                        </Typography>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          Added by: {setting.username} on{" "}
+                          {new Date(setting.date).toLocaleDateString()}
+                        </Typography>
+                      </Box>
+                      <div
+                        id={`paper-${setting.id}`}
+                        onClick={() => handleModalToggle(setting.id)}
+                        style={{
+                          cursor: "pointer",
+                          backgroundColor: "#FFFFFF",
+                          color: "#000000",
+                          padding: "20px",
+                          overflowX: "auto",
+                          width: "100%",
+                          contain: "layout paint",
+                          minHeight: "300px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          overflowY: "visible",
+                          marginBottom: "20px",
+                          borderRadius: "20px",
+                        }}
+                      />
+                      <TuneAudioPlayer
+                        visualObj={visualObjs[setting.id]}
+                        settingId={setting.id}
+                      />
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </SortableCard>
+            ))}
+          </Stack>
+        </SortableContext>
+      </DndContext>
 
       <SheetMusicModal
         open={Boolean(selectedSetting)}
