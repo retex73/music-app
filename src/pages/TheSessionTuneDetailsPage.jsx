@@ -35,6 +35,7 @@ function TheSessionTuneDetailsPage() {
           name: setting.name,
           type: setting.type,
           meter: setting.meter,
+          mode: setting.mode,
         }));
         setSettings(formattedSettings);
       } catch (error) {
