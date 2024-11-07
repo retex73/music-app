@@ -36,6 +36,7 @@ const SortableCard = ({ setting, children, id }) => {
 const TuneSettingsList = ({ settings, onReorder }) => {
   const [visualObjs, setVisualObjs] = useState({});
   const [selectedSetting, setSelectedSetting] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -115,8 +116,18 @@ ${setting.abc}`;
     }
   };
 
+  const handleDragStart = () => {
+    setIsDragging(true);
+    // Smoothly scroll to show more content
+    window.scrollTo({
+      top: window.scrollY + 100,
+      behavior: "smooth",
+    });
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
+    setIsDragging(false);
 
     if (active.id !== over.id) {
       const oldIndex = settings.findIndex((s) => s.id === active.id);
@@ -126,17 +137,41 @@ ${setting.abc}`;
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
+    <Box
+      sx={{
+        mt: 4,
+        transition: "transform 0.3s ease-out",
+        transform: isDragging ? "scale(0.5)" : "scale(1)",
+        transformOrigin: "top center",
+      }}
+    >
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
         <SortableContext
           items={settings.map((s) => s.id)}
           strategy={verticalListSortingStrategy}
         >
-          <Stack spacing={2}>
+          <Stack
+            spacing={isDragging ? 1 : 2} // Reduce spacing while dragging
+            sx={{
+              transition: "all 0.3s ease-out",
+              "& .MuiCard-root": {
+                transition: "all 0.3s ease-out",
+                transform: isDragging ? "scale(0.95)" : "scale(1)",
+                opacity: isDragging ? 0.8 : 1,
+              },
+              // Highlight the dragged item
+              "& .MuiCard-root:active": {
+                opacity: 1,
+                transform: "scale(1)",
+                boxShadow: "0 0 20px rgba(0,0,0,0.2)",
+              },
+            }}
+          >
             {settings.map((setting) => (
               <SortableCard key={setting.id} id={setting.id}>
                 <Card
@@ -156,6 +191,13 @@ ${setting.abc}`;
                     cursor: "grab",
                     "&:active": {
                       cursor: "grabbing",
+                    },
+                    // Add a subtle hover effect
+                    "&:hover": {
+                      transform: !isDragging ? "translateY(-2px)" : "none",
+                      boxShadow: !isDragging
+                        ? "0 4px 8px rgba(0,0,0,0.1)"
+                        : "none",
                     },
                   }}
                 >
@@ -207,6 +249,29 @@ ${setting.abc}`;
           </Stack>
         </SortableContext>
       </DndContext>
+
+      {/* Add a visual indicator when in dragging mode */}
+      {isDragging && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "primary.main",
+            color: "white",
+            padding: "8px 16px",
+            borderRadius: "20px",
+            zIndex: 1000,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            animation: "fadeIn 0.3s ease-out",
+          }}
+        >
+          <Typography variant="body2">
+            Reordering Mode - Drag items to reposition
+          </Typography>
+        </Box>
+      )}
 
       <SheetMusicModal
         open={Boolean(selectedSetting)}
