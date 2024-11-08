@@ -7,9 +7,11 @@ const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
 
   const debouncedSearch = useCallback(
-    debounce((searchTerm) => {
-      onSearch(searchTerm.trim());
-    }, 500),
+    (searchTerm) => {
+      debounce((term) => {
+        onSearch(term.trim());
+      }, 500)(searchTerm);
+    },
     [onSearch]
   );
 

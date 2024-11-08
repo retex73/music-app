@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import abcjs from "abcjs";
 // Import Font Awesome for the audio control icons
@@ -28,7 +28,38 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
     totalTime: 0,
   });
 
+  const handleNoteClick = useCallback(
+    (abcElem) => {
+      if (!abcElem?.midiPitches) return;
+
+      abcjs.synth
+        .playEvent(
+          abcElem.midiPitches,
+          abcElem.midiGraceNotePitches,
+          visualObj.millisecondsPerMeasure()
+        )
+        .catch((error) => console.error("Error playing note:", error));
+    },
+    [visualObj]
+  );
+
   useEffect(() => {
+    // Create click listener when visualObj changes
+    if (visualObj) {
+      const paperElement = document.querySelector(`#paper-${settingId} svg`);
+      if (paperElement) {
+        // Add click listener to the SVG
+        paperElement.addEventListener("click", (event) => {
+          const closestNote = event.target.closest(".abcjs-note");
+          if (closestNote) {
+            const dataIndex = closestNote.getAttribute("data-index");
+            const abcElem = visualObj.getElementFromChar(dataIndex);
+            handleNoteClick(abcElem);
+          }
+        });
+      }
+    }
+
     // Cleanup function
     return () => {
       if (synthControlRef.current) {
@@ -36,7 +67,7 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
         synthControlRef.current = null;
       }
     };
-  }, []);
+  }, [visualObj, settingId, handleNoteClick]);
 
   const activateAudio = async () => {
     if (!visualObj || !abcjs.synth.supportsAudio()) {
@@ -72,7 +103,9 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
         },
       });
 
-      await synthControlRef.current.setTune(visualObj, true);
+      await synthControlRef.current.setTune(visualObj, true, {
+        cursor: cursorControl,
+      });
       document
         .querySelector(`#audio-${settingId} .abcjs-inline-audio`)
         .classList.remove("disabled");
@@ -143,16 +176,6 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
         cursor.setAttribute("y2", 0);
       }
     },
-  };
-
-  const handleNoteClick = (abcElem) => {
-    if (!abcElem.midiPitches) return;
-
-    abcjs.synth.playEvent(
-      abcElem.midiPitches,
-      abcElem.midiGraceNotePitches,
-      visualObj.millisecondsPerMeasure()
-    );
   };
 
   const downloadMidi = () => {
