@@ -3,10 +3,48 @@ import { Box, Typography, Card, CardContent, Stack } from "@mui/material";
 import abcjs from "abcjs";
 import TuneAudioPlayer from "../TuneAudioPlayer";
 import SheetMusicModal from "./SheetMusicModal";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensors,
+  useSensor,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-const TuneSettingsList = ({ settings }) => {
+const SortableCard = ({ setting, children, id }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  );
+};
+
+const TuneSettingsList = ({ settings, onReorder }) => {
   const [visualObjs, setVisualObjs] = useState({});
   const [selectedSetting, setSelectedSetting] = useState(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // 8px movement required before drag starts
+      },
+    })
+  );
 
   useEffect(() => {
     const newVisualObjs = {};
@@ -78,72 +116,162 @@ ${setting.abc}`;
     }
   };
 
+  const handleDragStart = () => {
+    setIsDragging(true);
+    // Smoothly scroll to show more content
+    window.scrollTo({
+      top: window.scrollY + 100,
+      behavior: "smooth",
+    });
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    setIsDragging(false);
+
+    if (active.id !== over.id) {
+      const oldIndex = settings.findIndex((s) => s.id === active.id);
+      const newIndex = settings.findIndex((s) => s.id === over.id);
+      onReorder(oldIndex, newIndex);
+    }
+  };
+
   return (
-    <Box sx={{ mt: 4 }}>
-      <Stack spacing={2}>
-        {settings.map((setting) => (
-          <Card
-            key={setting.id}
+    <Box
+      sx={{
+        mt: 4,
+        transition: "transform 0.3s ease-out",
+        transform: isDragging ? "scale(0.5)" : "scale(1)",
+        transformOrigin: "top center",
+      }}
+    >
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={settings.map((s) => s.id)}
+          strategy={verticalListSortingStrategy}
+        >
+          <Stack
+            spacing={isDragging ? 1 : 2} // Reduce spacing while dragging
             sx={{
-              width: "100%",
-              backgroundColor: "#FFFFFF",
-              foregroundColor: "#000000",
-              contain: "layout paint",
-              "& svg": {
-                maxWidth: "100%",
-                height: "auto",
-                minHeight: "200px",
-                display: "block",
-                overflow: "visible",
-                marginBottom: "40px",
+              transition: "all 0.3s ease-out",
+              "& .MuiCard-root": {
+                transition: "all 0.3s ease-out",
+                transform: isDragging ? "scale(0.95)" : "scale(1)",
+                opacity: isDragging ? 0.8 : 1,
+              },
+              // Highlight the dragged item
+              "& .MuiCard-root:active": {
+                opacity: 1,
+                transform: "scale(1)",
+                boxShadow: "0 0 20px rgba(0,0,0,0.2)",
               },
             }}
           >
-            <CardContent
-              sx={{
-                p: 3,
-                backgroundColor: "#FFFFFF",
-              }}
-            >
-              <Stack spacing={2}>
-                <Box>
-                  <Typography variant="subtitle2" color="text.primary">
-                    Key: {setting.key}
-                  </Typography>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    Added by: {setting.username} on{" "}
-                    {new Date(setting.date).toLocaleDateString()}
-                  </Typography>
-                </Box>
-                <div
-                  id={`paper-${setting.id}`}
-                  onClick={() => handleModalToggle(setting.id)}
-                  style={{
-                    cursor: "pointer",
-                    backgroundColor: "#FFFFFF",
-                    color: "#000000",
-                    padding: "20px",
-                    overflowX: "auto",
+            {settings.map((setting) => (
+              <SortableCard key={setting.id} id={setting.id}>
+                <Card
+                  sx={{
                     width: "100%",
+                    backgroundColor: "#FFFFFF",
+                    foregroundColor: "#000000",
                     contain: "layout paint",
-                    minHeight: "300px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    overflowY: "visible",
-                    marginBottom: "20px",
-                    borderRadius: "20px",
+                    "& svg": {
+                      maxWidth: "100%",
+                      height: "auto",
+                      minHeight: "200px",
+                      display: "block",
+                      overflow: "visible",
+                      marginBottom: "40px",
+                    },
+                    cursor: "grab",
+                    "&:active": {
+                      cursor: "grabbing",
+                    },
+                    // Add a subtle hover effect
+                    "&:hover": {
+                      transform: !isDragging ? "translateY(-2px)" : "none",
+                      boxShadow: !isDragging
+                        ? "0 4px 8px rgba(0,0,0,0.1)"
+                        : "none",
+                    },
                   }}
-                />
-                <TuneAudioPlayer
-                  visualObj={visualObjs[setting.id]}
-                  settingId={setting.id}
-                />
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
-      </Stack>
+                >
+                  <CardContent
+                    sx={{
+                      p: 3,
+                      backgroundColor: "#FFFFFF",
+                    }}
+                  >
+                    <Stack spacing={2}>
+                      <Box>
+                        <Typography variant="subtitle2" color="text.primary">
+                          Key: {setting.key}
+                        </Typography>
+                        <Typography variant="subtitle2" color="text.secondary">
+                          Added by: {setting.username} on{" "}
+                          {new Date(setting.date).toLocaleDateString()}
+                        </Typography>
+                      </Box>
+                      <div
+                        id={`paper-${setting.id}`}
+                        onClick={() => handleModalToggle(setting.id)}
+                        style={{
+                          cursor: "pointer",
+                          backgroundColor: "#FFFFFF",
+                          color: "#000000",
+                          padding: "20px",
+                          overflowX: "auto",
+                          width: "100%",
+                          contain: "layout paint",
+                          minHeight: "300px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          overflowY: "visible",
+                          marginBottom: "20px",
+                          borderRadius: "20px",
+                        }}
+                      />
+                      <TuneAudioPlayer
+                        visualObj={visualObjs[setting.id]}
+                        settingId={setting.id}
+                      />
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </SortableCard>
+            ))}
+          </Stack>
+        </SortableContext>
+      </DndContext>
+
+      {/* Add a visual indicator when in dragging mode */}
+      {isDragging && (
+        <Box
+          sx={{
+            position: "fixed",
+            top: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "primary.main",
+            color: "white",
+            padding: "8px 16px",
+            borderRadius: "20px",
+            zIndex: 1000,
+            boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+            animation: "fadeIn 0.3s ease-out",
+          }}
+        >
+          <Typography variant="body2">
+            Reordering Mode - Drag items to reposition
+          </Typography>
+        </Box>
+      )}
 
       <SheetMusicModal
         open={Boolean(selectedSetting)}

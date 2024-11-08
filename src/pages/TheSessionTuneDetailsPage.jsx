@@ -37,6 +37,13 @@ function TheSessionTuneDetailsPage() {
           meter: setting.meter,
           mode: setting.mode,
         }));
+
+        const savedOrder = localStorage.getItem(`tune-${tuneId}-order`);
+        if (savedOrder) {
+          const orderMap = JSON.parse(savedOrder);
+          formattedSettings.sort((a, b) => orderMap[a.id] - orderMap[b.id]);
+        }
+
         setSettings(formattedSettings);
       } catch (error) {
         console.error("Error fetching tune details:", error);
@@ -68,6 +75,19 @@ function TheSessionTuneDetailsPage() {
       localStorage.setItem("sessionfavourites", JSON.stringify(favorites));
     }
     setIsFavorite(!isFavorite);
+  };
+
+  const handleReorder = (oldIndex, newIndex) => {
+    const newSettings = [...settings];
+    const [removed] = newSettings.splice(oldIndex, 1);
+    newSettings.splice(newIndex, 0, removed);
+    setSettings(newSettings);
+
+    const orderMap = {};
+    newSettings.forEach((setting, index) => {
+      orderMap[setting.id] = index;
+    });
+    localStorage.setItem(`tune-${tuneId}-order`, JSON.stringify(orderMap));
   };
 
   if (!settings.length) {
@@ -121,7 +141,7 @@ function TheSessionTuneDetailsPage() {
             <Chip label={firstSetting.mode} />
           </Stack>
 
-          <TuneSettingsList settings={settings} />
+          <TuneSettingsList settings={settings} onReorder={handleReorder} />
         </CardContent>
       </Card>
     </Box>
