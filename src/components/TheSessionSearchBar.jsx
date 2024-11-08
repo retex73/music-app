@@ -3,7 +3,10 @@ import { Paper, InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
 const TheSessionSearchBar = ({ onSearch, initialQuery = "" }) => {
-  const [query, setQuery] = useState(initialQuery);
+  const [query, setQuery] = useState(() => {
+    const savedQuery = sessionStorage.getItem("lastSessionSearch");
+    return savedQuery || initialQuery;
+  });
 
   const handleInputChange = (e) => {
     const value = e.target.value;
