@@ -1,19 +1,17 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Paper, InputBase, IconButton } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import debounce from "lodash/debounce"; // Make sure to install lodash
+import debounce from "lodash/debounce";
+
+// Create the debounced function outside the component
+const createDebouncedSearch = (callback) =>
+  debounce((term) => {
+    callback(term.trim());
+  }, 500);
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState("");
-
-  const debouncedSearch = useCallback(
-    (searchTerm) => {
-      debounce((term) => {
-        onSearch(term.trim());
-      }, 500)(searchTerm);
-    },
-    [onSearch]
-  );
+  const [debouncedSearch] = useState(() => createDebouncedSearch(onSearch));
 
   const handleInputChange = (e) => {
     const value = e.target.value;
