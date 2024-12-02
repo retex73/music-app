@@ -12,35 +12,37 @@ import darkTheme from "./theme/darkTheme";
 import NavBar from "./components/NavBar";
 import { Box } from "@mui/material";
 import TheSessionTuneDetailsPage from "./pages/TheSessionTuneDetailsPage";
+import { AuthProvider } from "./contexts/AuthContext";
 
 function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Box
-        sx={{
-          minHeight: "100vh",
-          //   backgroundColor: "background.default",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <NavBar />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/hatao" element={<HataoPage />} />
-            <Route path="/tune/:tuneId" element={<TuneDetailsPage />} />
-            <Route path="/thesession" element={<TheSessionPage />} />
-            <Route
-              path="/thesession/tune/:tuneId"
-              element={<TheSessionTuneDetailsPage />}
-            />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
+    <AuthProvider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Box
+          sx={{
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <NavBar />
+          <Box component="main" sx={{ flexGrow: 1 }}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/hatao" element={<HataoPage />} />
+              <Route path="/tune/:tuneId" element={<TuneDetailsPage />} />
+              <Route path="/thesession" element={<TheSessionPage />} />
+              <Route
+                path="/thesession/tune/:tuneId"
+                element={<TheSessionTuneDetailsPage />}
+              />
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </Box>
         </Box>
-      </Box>
-    </ThemeProvider>
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
