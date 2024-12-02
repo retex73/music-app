@@ -25,12 +25,9 @@ export function FavoritesProvider({ children }) {
         setHataoFavorites(hataoData);
         setSessionFavorites(sessionData);
       } else {
-        // If not logged in, try to get from localStorage for backwards compatibility
-        const hataoData = JSON.parse(localStorage.getItem("favorites")) || [];
-        const sessionData =
-          JSON.parse(localStorage.getItem("sessionfavourites")) || [];
-        setHataoFavorites(hataoData);
-        setSessionFavorites(sessionData);
+        // Reset favorites when user is not logged in
+        setHataoFavorites([]);
+        setSessionFavorites([]);
       }
       setLoading(false);
     };
@@ -39,31 +36,21 @@ export function FavoritesProvider({ children }) {
   }, [currentUser]);
 
   const toggleFavorite = async (tuneId, type = "hatao") => {
+    if (!currentUser) return; // Don't allow favoriting if not logged in
+
     const favorites = type === "hatao" ? hataoFavorites : sessionFavorites;
     const setFavorites =
       type === "hatao" ? setHataoFavorites : setSessionFavorites;
-    const storageKey = type === "hatao" ? "favorites" : "sessionfavourites";
-
     const isFavorite = favorites.includes(tuneId);
 
-    if (currentUser) {
-      const success = isFavorite
-        ? await favouritesService.removeFavorite(currentUser.uid, tuneId, type)
-        : await favouritesService.addFavorite(currentUser.uid, tuneId, type);
+    const success = isFavorite
+      ? await favouritesService.removeFavorite(currentUser.uid, tuneId, type)
+      : await favouritesService.addFavorite(currentUser.uid, tuneId, type);
 
-      if (success) {
-        setFavorites((prev) =>
-          isFavorite ? prev.filter((id) => id !== tuneId) : [...prev, tuneId]
-        );
-      }
-    } else {
-      // Fallback to localStorage if not logged in
-      const newFavorites = isFavorite
-        ? favorites.filter((id) => id !== tuneId)
-        : [...favorites, tuneId];
-
-      setFavorites(newFavorites);
-      localStorage.setItem(storageKey, JSON.stringify(newFavorites));
+    if (success) {
+      setFavorites((prev) =>
+        isFavorite ? prev.filter((id) => id !== tuneId) : [...prev, tuneId]
+      );
     }
   };
 

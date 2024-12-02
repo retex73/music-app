@@ -10,23 +10,25 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { getSessionTuneById } from "../services/sessionService";
+import { useFavorites } from "../contexts/FavoritesContext";
 
 function SessionFavoritesList() {
   const [favoriteTunes, setFavoriteTunes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { sessionFavorites } = useFavorites();
 
   useEffect(() => {
     const fetchFavoriteTunes = async () => {
-      const favorites =
-        JSON.parse(localStorage.getItem("sessionfavourites")) || [];
-      if (favorites.length === 0) {
+      if (sessionFavorites.length === 0) {
         setLoading(false);
         return;
       }
 
       try {
         // Fetch full details for each favorite tune using the API
-        const tunesPromises = favorites.map((id) => getSessionTuneById(id));
+        const tunesPromises = sessionFavorites.map((id) =>
+          getSessionTuneById(id)
+        );
         const tunesArrays = await Promise.all(tunesPromises);
         // Take the first setting of each tune
         const tunes = tunesArrays.map((settings) => settings[0]);
@@ -39,17 +41,7 @@ function SessionFavoritesList() {
     };
 
     fetchFavoriteTunes();
-
-    // Listen for changes in localStorage
-    const handleStorageChange = (e) => {
-      if (e.key === "sessionfavourites") {
-        fetchFavoriteTunes();
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [sessionFavorites]);
 
   if (loading) {
     return (
