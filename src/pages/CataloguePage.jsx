@@ -8,12 +8,27 @@ import {
   Button,
   Grid,
   Paper,
+  Chip,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Papa from "papaparse";
 
 const ITEMS_PER_PAGE = 10;
 const ALPHABET = "#ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const TUNE_TYPES = [
+  "jig",
+  "reel",
+  "slip jig",
+  "hornpipe",
+  "polka",
+  "slide",
+  "waltz",
+  "barndance",
+  "strathspey",
+  "three-two",
+  "mazurka",
+  "march",
+];
 
 const CataloguePage = () => {
   const [tunes, setTunes] = useState([]);
@@ -21,6 +36,7 @@ const CataloguePage = () => {
   const [page, setPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLetter, setSelectedLetter] = useState("");
+  const [selectedTypes, setSelectedTypes] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,12 +78,24 @@ const CataloguePage = () => {
       }
     }
 
+    if (selectedTypes.length > 0) {
+      filtered = filtered.filter((tune) =>
+        selectedTypes.includes(tune.type.toLowerCase())
+      );
+    }
+
     setFilteredTunes(filtered);
     setPage(1);
-  }, [searchTerm, selectedLetter, tunes]);
+  }, [searchTerm, selectedLetter, selectedTypes, tunes]);
 
   const handleTuneClick = (tuneId) => {
     navigate(`/thesession/tune/${tuneId}`);
+  };
+
+  const handleTypeToggle = (type) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
   };
 
   const startIndex = (page - 1) * ITEMS_PER_PAGE;
@@ -92,6 +120,33 @@ const CataloguePage = () => {
         />
 
         <Paper sx={{ p: 2, mb: 2 }}>
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Filter by Type
+          </Typography>
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mb: 2 }}>
+            {TUNE_TYPES.map((type) => (
+              <Chip
+                key={type}
+                label={type.charAt(0).toUpperCase() + type.slice(1)}
+                onClick={() => handleTypeToggle(type)}
+                color={selectedTypes.includes(type) ? "primary" : "default"}
+                variant={selectedTypes.includes(type) ? "filled" : "outlined"}
+                sx={{
+                  textTransform: "capitalize",
+                  "&:hover": {
+                    backgroundColor: (theme) =>
+                      selectedTypes.includes(type)
+                        ? theme.palette.primary.dark
+                        : theme.palette.action.hover,
+                  },
+                }}
+              />
+            ))}
+          </Box>
+
+          <Typography variant="h6" sx={{ mb: 1 }}>
+            Filter by Letter
+          </Typography>
           <Grid container spacing={1}>
             {ALPHABET.map((letter) => (
               <Grid item key={letter}>
@@ -112,6 +167,9 @@ const CataloguePage = () => {
 
       <Paper sx={{ width: "100%", mb: 2 }}>
         <Box sx={{ p: 2 }}>
+          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 2 }}>
+            {filteredTunes.length} tunes found
+          </Typography>
           {displayedTunes.map((tune) => (
             <Box
               key={`${tune.tune_id}-${tune.setting_id}`}
