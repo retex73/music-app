@@ -42,6 +42,9 @@ const NavBar = () => {
           <NavButton component={RouterLink} to="/thesession">
             The Session
           </NavButton>
+          <NavButton component={RouterLink} to="/catalogue">
+            Catalogue
+          </NavButton>
         </Box>
         <AccountMenu />
       </Toolbar>
