@@ -16,12 +16,14 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import YouTube from "react-youtube";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useFavorites } from "../contexts/FavoritesContext";
 
 function TuneDetailsPage() {
   const { tuneId } = useParams();
   const navigate = useNavigate();
   const [tune, setTune] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { hataoFavorites, toggleFavorite } = useFavorites();
+  const isFavorite = hataoFavorites.includes(tuneId);
 
   useEffect(() => {
     const fetchTune = async () => {
@@ -38,24 +40,8 @@ function TuneDetailsPage() {
     }
   }, [tuneId]);
 
-  useEffect(() => {
-    // Check if the tune is already a favorite
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setIsFavorite(favorites.includes(tuneId));
-  }, [tuneId]);
-
-  const toggleFavorite = () => {
-    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    if (isFavorite) {
-      // Remove from favorites
-      const updatedFavorites = favorites.filter((id) => id !== tuneId);
-      localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-    } else {
-      // Add to favorites
-      favorites.push(tuneId);
-      localStorage.setItem("favorites", JSON.stringify(favorites));
-    }
-    setIsFavorite(!isFavorite);
+  const handleToggleFavorite = () => {
+    toggleFavorite(tuneId, "hatao");
   };
 
   if (!tune) {
@@ -99,7 +85,10 @@ function TuneDetailsPage() {
             >
               {tune["Tune Title"]}
             </Typography>
-            <IconButton onClick={toggleFavorite} aria-label="toggle favorite">
+            <IconButton
+              onClick={handleToggleFavorite}
+              aria-label="toggle favorite"
+            >
               {isFavorite ? (
                 <FavoriteIcon color="error" />
               ) : (

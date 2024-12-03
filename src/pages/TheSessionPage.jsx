@@ -21,6 +21,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { useNavigate } from "react-router-dom";
 import { searchSessionTunes } from "../services/sessionService";
 import SessionFavoritesList from "../components/SessionFavoritesList";
+import { useFavorites } from "../contexts/FavoritesContext";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -29,16 +30,13 @@ const TheSessionPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const [favorites, setFavorites] = useState(() => {
-    const saved = localStorage.getItem("sessionfavourites");
-    return saved ? JSON.parse(saved) : [];
-  });
   const [searchQuery, setSearchQuery] = useState(() => {
     const savedQuery = sessionStorage.getItem("lastSessionSearch");
     return savedQuery || "";
   });
 
   const navigate = useNavigate();
+  const { sessionFavorites, toggleFavorite } = useFavorites();
 
   const debouncedFetch = useCallback(async (searchTerm) => {
     if (!searchTerm) {
@@ -81,35 +79,12 @@ const TheSessionPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleToggleFavorite = useCallback((tuneId) => {
-    setFavorites((prevFavorites) => {
-      const tuneIdString = String(tuneId);
-      let newFavorites;
-      if (prevFavorites.includes(tuneIdString)) {
-        // Remove from favorites
-        newFavorites = prevFavorites.filter((id) => id !== tuneIdString);
-      } else {
-        // Add to favorites (prevent duplicates)
-        newFavorites = [...prevFavorites, tuneIdString];
-      }
-
-      localStorage.setItem("sessionfavourites", JSON.stringify(newFavorites));
-      return newFavorites;
-    });
-  }, []);
-
-  // Listen for localStorage changes from other components
-  useEffect(() => {
-    const handleStorageChange = (e) => {
-      if (e.key === "sessionfavourites") {
-        const newFavorites = e.newValue ? JSON.parse(e.newValue) : [];
-        setFavorites(newFavorites);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  const handleToggleFavorite = useCallback(
+    (tuneId) => {
+      toggleFavorite(tuneId, "session");
+    },
+    [toggleFavorite]
+  );
 
   // Calculate pagination values
   const totalPages = Math.ceil(tunes.length / ITEMS_PER_PAGE);
@@ -250,7 +225,9 @@ const TheSessionPage = () => {
                               handleToggleFavorite(String(tune.tune_id));
                             }}
                             sx={{
-                              color: favorites.includes(String(tune.tune_id))
+                              color: sessionFavorites.includes(
+                                String(tune.tune_id)
+                              )
                                 ? "error.main"
                                 : "inherit",
                               "&:hover": {
@@ -258,7 +235,7 @@ const TheSessionPage = () => {
                               },
                             }}
                           >
-                            {favorites.includes(String(tune.tune_id)) ? (
+                            {sessionFavorites.includes(String(tune.tune_id)) ? (
                               <FavoriteIcon />
                             ) : (
                               <FavoriteBorderIcon />

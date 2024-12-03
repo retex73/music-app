@@ -2,6 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Box, Button, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import AccountMenu from "./AccountMenu";
 
 // Custom styled logo text
 const LogoText = styled(Typography)(({ theme }) => ({
@@ -42,6 +43,7 @@ const NavBar = () => {
             The Session
           </NavButton>
         </Box>
+        <AccountMenu />
       </Toolbar>
     </AppBar>
   );

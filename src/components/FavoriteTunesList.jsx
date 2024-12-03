@@ -10,19 +10,24 @@ import {
 } from "@mui/material";
 import { getTuneById } from "../services/tunesService";
 import { Link } from "react-router-dom"; // Assuming you're using react-router for navigation
+import { useFavorites } from "../contexts/FavoritesContext";
 
 function FavoriteTunesList() {
   const [favoriteTunes, setFavoriteTunes] = useState([]);
+  const { hataoFavorites } = useFavorites();
 
   useEffect(() => {
     const fetchFavoriteTunes = async () => {
-      const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-      const tunes = await Promise.all(favorites.map((id) => getTuneById(id)));
+      if (hataoFavorites.length === 0) return;
+
+      const tunes = await Promise.all(
+        hataoFavorites.map((id) => getTuneById(id))
+      );
       setFavoriteTunes(tunes);
     };
 
     fetchFavoriteTunes();
-  }, []);
+  }, [hataoFavorites]);
 
   if (favoriteTunes.length === 0) {
     return (
