@@ -59,7 +59,8 @@ const Footer = () => {
               IrishWhistleTunes
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Learn and discover traditional Irish whistle music
+              Learn and discover traditional Irish whistle music with music from
+              the session and Hatao's Tune a day.
             </Typography>
           </Box>
 

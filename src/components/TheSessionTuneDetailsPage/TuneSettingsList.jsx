@@ -7,7 +7,6 @@ import {
   CardContent,
   Stack,
   CardHeader,
-  IconButton,
   Avatar,
   Link,
   Button,
@@ -28,7 +27,6 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import ReorderIcon from "@mui/icons-material/Reorder";
 
 const SortableCard = ({ setting, children, id }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
