@@ -5,22 +5,17 @@ import { tunePreferencesService } from "../services/tunePreferencesService";
 import {
   Box,
   Typography,
-  Card,
-  CardContent,
   Chip,
   Button,
   Stack,
   IconButton,
-  List,
-  ListItem,
-  ListItemText,
   Menu,
   MenuItem,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ReorderIcon from "@mui/icons-material/Reorder";
+
 import TuneSettingsList from "../components/TheSessionTuneDetailsPage/TuneSettingsList";
 import { useFavorites } from "../contexts/FavoritesContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -134,69 +129,61 @@ function TheSessionTuneDetailsPage() {
       <Button
         onClick={() => navigate("/thesession")}
         startIcon={<ArrowBackIcon />}
-        sx={{ mb: 2 }}
+        sx={{ mb: 4 }}
         aria-label="back to search"
       >
         Back to Search
       </Button>
 
-      <Card>
-        <CardContent>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+      <Box sx={{ mb: 4 }}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          sx={{ mb: 2 }}
+        >
+          <Typography variant="h4" component="h1" color="primary.main">
+            {firstSetting.name}
+          </Typography>
+          <IconButton
+            onClick={handleToggleFavorite}
+            aria-label="toggle favorite"
           >
-            <Typography
-              variant="h4"
-              component="h1"
-              gutterBottom
-              color="primary.main"
-            >
-              {firstSetting.name}
-            </Typography>
-            <IconButton
-              onClick={handleToggleFavorite}
-              aria-label="toggle favorite"
-            >
-              {isFavorite ? (
-                <FavoriteIcon color="error" />
-              ) : (
-                <FavoriteBorderIcon />
-              )}
-            </IconButton>
-          </Stack>
+            {isFavorite ? (
+              <FavoriteIcon color="error" />
+            ) : (
+              <FavoriteBorderIcon />
+            )}
+          </IconButton>
+        </Stack>
 
-          <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-            <Chip label={firstSetting.type} />
-            <Chip label={`${firstSetting.meter}`} />
-            <Chip label={firstSetting.mode} />
-          </Stack>
+        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+          <Chip label={firstSetting.type} />
+          <Chip label={`${firstSetting.meter}`} />
+          <Chip label={firstSetting.mode} />
+        </Stack>
+      </Box>
 
-          <Box sx={{ mt: 4 }}>
-            <TuneSettingsList
-              settings={settings}
-              onReorder={handleSetPreferredVersion}
-              onVersionMenuClick={handleVersionMenuClick}
-            />
-          </Box>
+      <TuneSettingsList
+        settings={settings}
+        onReorder={handleSetPreferredVersion}
+        onVersionMenuClick={handleVersionMenuClick}
+      />
 
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleVersionMenuClose}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleVersionMenuClose}
+      >
+        {settings.map((_, index) => (
+          <MenuItem
+            key={index}
+            onClick={() => handleSetPreferredVersion(index)}
           >
-            {settings.map((_, index) => (
-              <MenuItem
-                key={index}
-                onClick={() => handleSetPreferredVersion(index)}
-              >
-                Move to position {index + 1}
-              </MenuItem>
-            ))}
-          </Menu>
-        </CardContent>
-      </Card>
+            Move to position {index + 1}
+          </MenuItem>
+        ))}
+      </Menu>
     </Box>
   );
 }
