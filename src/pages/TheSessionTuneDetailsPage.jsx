@@ -173,32 +173,13 @@ function TheSessionTuneDetailsPage() {
             <Chip label={firstSetting.mode} />
           </Stack>
 
-          <List>
-            {settings.map((setting, index) => (
-              <ListItem
-                key={setting.id}
-                secondaryAction={
-                  currentUser && (
-                    <IconButton
-                      edge="end"
-                      aria-label="reorder"
-                      onClick={(e) => handleVersionMenuClick(e, setting)}
-                    >
-                      <ReorderIcon />
-                    </IconButton>
-                  )
-                }
-              >
-                <ListItemText
-                  primary={`Version ${index + 1} by ${setting.username}`}
-                  secondary={`Added on ${new Date(
-                    setting.date
-                  ).toLocaleDateString()}`}
-                />
-                <TuneSettingsList settings={[setting]} />
-              </ListItem>
-            ))}
-          </List>
+          <Box sx={{ mt: 4 }}>
+            <TuneSettingsList
+              settings={settings}
+              onReorder={handleSetPreferredVersion}
+              onVersionMenuClick={handleVersionMenuClick}
+            />
+          </Box>
 
           <Menu
             anchorEl={anchorEl}

@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Box, Typography, Card, CardContent, Stack } from "@mui/material";
+import { useAuth } from "../../contexts/AuthContext";
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  Stack,
+  CardHeader,
+  IconButton,
+} from "@mui/material";
 import abcjs from "abcjs";
 import TuneAudioPlayer from "../TuneAudioPlayer";
 import SheetMusicModal from "./SheetMusicModal";
@@ -16,6 +25,7 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import ReorderIcon from "@mui/icons-material/Reorder";
 
 const SortableCard = ({ setting, children, id }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -33,7 +43,8 @@ const SortableCard = ({ setting, children, id }) => {
   );
 };
 
-const TuneSettingsList = ({ settings, onReorder }) => {
+const TuneSettingsList = ({ settings, onReorder, onVersionMenuClick }) => {
+  const { currentUser } = useAuth();
   const [visualObjs, setVisualObjs] = useState({});
   const [selectedSetting, setSelectedSetting] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -172,7 +183,7 @@ ${setting.abc}`;
               },
             }}
           >
-            {settings.map((setting) => (
+            {settings.map((setting, index) => (
               <SortableCard key={setting.id} id={setting.id}>
                 <Card
                   sx={{
@@ -201,6 +212,23 @@ ${setting.abc}`;
                     },
                   }}
                 >
+                  <CardHeader
+                    title={`Version ${index + 1}`}
+                    subheader={`Added by ${setting.username} on ${new Date(
+                      setting.date
+                    ).toLocaleDateString()}`}
+                    action={
+                      currentUser && (
+                        <IconButton
+                          edge="end"
+                          aria-label="reorder"
+                          onClick={(e) => onVersionMenuClick(e, setting)}
+                        >
+                          <ReorderIcon />
+                        </IconButton>
+                      )
+                    }
+                  />
                   <CardContent
                     sx={{
                       p: 3,
@@ -208,15 +236,6 @@ ${setting.abc}`;
                     }}
                   >
                     <Stack spacing={2}>
-                      <Box>
-                        <Typography variant="subtitle2" color="text.primary">
-                          Key: {setting.key}
-                        </Typography>
-                        <Typography variant="subtitle2" color="text.secondary">
-                          Added by: {setting.username} on{" "}
-                          {new Date(setting.date).toLocaleDateString()}
-                        </Typography>
-                      </Box>
                       <div
                         id={`paper-${setting.id}`}
                         onClick={() => handleModalToggle(setting.id)}
