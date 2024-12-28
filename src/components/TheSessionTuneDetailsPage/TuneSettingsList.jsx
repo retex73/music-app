@@ -8,6 +8,9 @@ import {
   Stack,
   CardHeader,
   IconButton,
+  Avatar,
+  Link,
+  Button,
 } from "@mui/material";
 import abcjs from "abcjs";
 import TuneAudioPlayer from "../TuneAudioPlayer";
@@ -213,21 +216,99 @@ ${setting.abc}`;
                   }}
                 >
                   <CardHeader
-                    title={`Version ${index + 1}`}
-                    subheader={`Added by ${setting.username} on ${new Date(
-                      setting.date
-                    ).toLocaleDateString()}`}
+                    avatar={
+                      <Avatar
+                        sx={{
+                          bgcolor: "primary.main",
+                          color: "primary.contrastText",
+                          fontWeight: 600,
+                          width: 36,
+                          height: 36,
+                          fontSize: "0.9rem",
+                          transition: "transform 0.2s ease-in-out",
+                          "&:hover": {
+                            transform: "scale(1.05)",
+                          },
+                        }}
+                      >
+                        {index + 1}
+                      </Avatar>
+                    }
+                    subheader={
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "text.secondary",
+                          "& a": {
+                            color: "primary.main",
+                            textDecoration: "none",
+                            transition: "color 0.2s ease-in-out",
+                            "&:hover": {
+                              color: "primary.light",
+                              textDecoration: "underline",
+                            },
+                          },
+                        }}
+                      >
+                        Added on{" "}
+                        <Link
+                          href="https://thesession.org/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          The Session
+                        </Link>{" "}
+                        by{" "}
+                        <Typography
+                          component="span"
+                          sx={{
+                            color: "text.primary",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {setting.username}
+                        </Typography>{" "}
+                        on {new Date(setting.date).toLocaleDateString()}
+                      </Typography>
+                    }
                     action={
                       currentUser && (
-                        <IconButton
+                        <Button
                           edge="end"
                           aria-label="reorder"
                           onClick={(e) => onVersionMenuClick(e, setting)}
+                          size="small"
+                          sx={{
+                            color: "primary.main",
+                            textTransform: "none",
+                            "&:hover": {
+                              color: "primary.light",
+                              backgroundColor: "rgba(255, 107, 53, 0.08)",
+                            },
+                          }}
                         >
-                          <ReorderIcon />
-                        </IconButton>
+                          Reorder
+                        </Button>
                       )
                     }
+                    sx={{
+                      p: 1,
+                      "& .MuiCardHeader-content": {
+                        overflow: "hidden",
+                      },
+                      "& .MuiCardHeader-action": {
+                        alignSelf: "center",
+                        m: 0,
+                      },
+                      "& .MuiCardHeader-avatar": {
+                        mr: 2,
+                      },
+                      borderBottom: 1,
+                      borderColor: "divider",
+                      backgroundColor: "rgba(255, 255, 255, 0.02)",
+                      minHeight: "unset",
+                      height: "auto",
+                    }}
                   />
                   <CardContent
                     sx={{
