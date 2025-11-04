@@ -20,8 +20,6 @@ const SearchResults = ({ results, hasSearched }) => {
   const [page, setPage] = useState(1);
 
   const handleTuneClick = (tuneId) => {
-    // console log the tune id
-    console.log("Tune ID:", tuneId);
     navigate(`/tune/${tuneId}`);
   };
 

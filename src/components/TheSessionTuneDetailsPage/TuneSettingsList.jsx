@@ -318,6 +318,14 @@ ${setting.abc}`;
                       <div
                         id={`paper-${setting.id}`}
                         onClick={() => handleModalToggle(setting.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleModalToggle(setting.id);
+                          }
+                        }}
+                        role="button"
+                        tabIndex={0}
                         style={{
                           cursor: "pointer",
                           backgroundColor: "#FFFFFF",
