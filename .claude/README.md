@@ -4,7 +4,7 @@ A comprehensive agent and skills system for Claude Code, designed specifically f
 
 ## Overview
 
-**9 Specialized Agents** + **23 Modular Skills** = Complete AI Development Team
+**10 Specialized Agents** + **25 Modular Skills** = Complete AI Development Team
 
 This system enables Claude Code to act as a full web development team with specialized knowledge in:
 - React + Material-UI frontend development
@@ -90,6 +90,12 @@ No configuration needed! The agents and skills are automatically available when 
 **Skills**: trunk-based-git, feature-flags, git-hygiene
 **Use for**: Enforcing ≤3 branches, daily merges, workflow compliance, feature flag guidance
 
+#### 10. CI/CD Workflow Engineer
+**Role**: GitHub Actions workflows, YAML validation, CI/CD optimization
+**Triggers**: Workflow errors, YAML syntax issues, build failures, pipeline optimization
+**Skills**: yaml-configuration, github-actions
+**Use for**: Creating workflows, fixing YAML errors, optimizing builds, debugging CI failures
+
 ## Skills Library
 
 ### Frontend Skills
@@ -126,10 +132,14 @@ No configuration needed! The agents and skills are automatically available when 
 - **dnd-patterns**: DND Kit integration, sortable lists, reordering
 - **error-handling**: Error boundaries, try-catch, user feedback
 
-### Git & Workflow Skills (NEW!)
+### Git & Workflow Skills
 - **trunk-based-git**: Trunk-based development workflow, branch management, merge strategies
 - **feature-flags**: Feature toggles for incomplete work, environment-based flags
 - **git-hygiene**: Branch cleanup automation, commit quality, repository maintenance
+
+### CI/CD & Infrastructure Skills (NEW!)
+- **yaml-configuration**: YAML syntax, validation, special characters, multi-line strings
+- **github-actions**: Workflow patterns, triggers, caching, optimization, debugging
 
 ## Usage Examples
 
