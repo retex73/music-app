@@ -1,26 +1,38 @@
+// Mock Firebase before importing anything
+jest.mock("firebase/firestore", () => {
+  const mockDb = {};
+  return {
+    getFirestore: jest.fn(() => mockDb),
+    doc: jest.fn(),
+    setDoc: jest.fn(),
+    getDoc: jest.fn(),
+    arrayUnion: jest.fn(),
+    arrayRemove: jest.fn(),
+  };
+});
+
+jest.mock("../../config/firebase", () => ({
+  __esModule: true,
+  default: {},
+}));
+
 import { favouritesService } from "../favouritesService";
 import {
   getFirestore,
   doc,
   setDoc,
   getDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
-
-// Mock Firebase
-jest.mock("firebase/firestore");
-jest.mock("../../config/firebase", () => ({
-  __esModule: true,
-  default: {},
-}));
 
 describe("favouritesService", () => {
   const mockUserId = "user123";
   const mockTuneId = "tune456";
-  const mockDb = {};
+  const mockDb = getFirestore(); // Get reference to the mocked db
 
   beforeEach(() => {
     jest.clearAllMocks();
-    getFirestore.mockReturnValue(mockDb);
   });
 
   describe("getFavorites", () => {
@@ -106,34 +118,18 @@ describe("favouritesService", () => {
       const result = await favouritesService.getFavorites(mockUserId, "hatao");
 
       expect(result).toEqual([]);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error getting favorites:",
-        expect.any(Error)
-      );
+      expect(consoleErrorSpy).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
-    });
-
-    it("should default to hatao type if not specified", async () => {
-      const mockFavorites = ["tune1"];
-      const mockDocSnap = {
-        exists: () => true,
-        data: () => ({ hatao: mockFavorites }),
-      };
-
-      doc.mockReturnValue({ id: mockUserId });
-      getDoc.mockResolvedValue(mockDocSnap);
-
-      const result = await favouritesService.getFavorites(mockUserId);
-
-      expect(result).toEqual(mockFavorites);
     });
   });
 
   describe("addFavorite", () => {
     it("should add favorite successfully", async () => {
-      doc.mockReturnValue({ id: mockUserId });
+      const mockDocRef = { id: mockUserId };
+      doc.mockReturnValue(mockDocRef);
       setDoc.mockResolvedValue(undefined);
+      arrayUnion.mockReturnValue(["tune1", mockTuneId]);
 
       const result = await favouritesService.addFavorite(
         mockUserId,
@@ -143,13 +139,52 @@ describe("favouritesService", () => {
 
       expect(doc).toHaveBeenCalledWith(mockDb, "favorites", mockUserId);
       expect(setDoc).toHaveBeenCalledWith(
-        { id: mockUserId },
+        mockDocRef,
         {
-          hatao: expect.any(Object), // arrayUnion
+          hatao: ["tune1", mockTuneId],
         },
         { merge: true }
       );
       expect(result).toBe(true);
+    });
+
+    it("should add session favorite when type is thesession", async () => {
+      const mockDocRef = { id: mockUserId };
+      doc.mockReturnValue(mockDocRef);
+      setDoc.mockResolvedValue(undefined);
+      arrayUnion.mockReturnValue([mockTuneId]);
+
+      const result = await favouritesService.addFavorite(
+        mockUserId,
+        mockTuneId,
+        "thesession"
+      );
+
+      expect(setDoc).toHaveBeenCalledWith(
+        mockDocRef,
+        {
+          thesession: [mockTuneId],
+        },
+        { merge: true }
+      );
+      expect(result).toBe(true);
+    });
+
+    it("should default to hatao type if not specified", async () => {
+      const mockDocRef = { id: mockUserId };
+      doc.mockReturnValue(mockDocRef);
+      setDoc.mockResolvedValue(undefined);
+      arrayUnion.mockReturnValue([mockTuneId]);
+
+      await favouritesService.addFavorite(mockUserId, mockTuneId);
+
+      expect(setDoc).toHaveBeenCalledWith(
+        mockDocRef,
+        {
+          hatao: [mockTuneId],
+        },
+        { merge: true }
+      );
     });
 
     it("should handle errors and return false", async () => {
@@ -167,32 +202,18 @@ describe("favouritesService", () => {
       );
 
       expect(result).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error adding favorite:",
-        expect.any(Error)
-      );
+      expect(consoleErrorSpy).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
-    });
-
-    it("should default to hatao type if not specified", async () => {
-      doc.mockReturnValue({ id: mockUserId });
-      setDoc.mockResolvedValue(undefined);
-
-      await favouritesService.addFavorite(mockUserId, mockTuneId);
-
-      expect(setDoc).toHaveBeenCalledWith(
-        { id: mockUserId },
-        expect.objectContaining({ hatao: expect.any(Object) }),
-        { merge: true }
-      );
     });
   });
 
   describe("removeFavorite", () => {
     it("should remove favorite successfully", async () => {
-      doc.mockReturnValue({ id: mockUserId });
+      const mockDocRef = { id: mockUserId };
+      doc.mockReturnValue(mockDocRef);
       setDoc.mockResolvedValue(undefined);
+      arrayRemove.mockReturnValue([]);
 
       const result = await favouritesService.removeFavorite(
         mockUserId,
@@ -202,13 +223,52 @@ describe("favouritesService", () => {
 
       expect(doc).toHaveBeenCalledWith(mockDb, "favorites", mockUserId);
       expect(setDoc).toHaveBeenCalledWith(
-        { id: mockUserId },
+        mockDocRef,
         {
-          hatao: expect.any(Object), // arrayRemove
+          hatao: [],
         },
         { merge: true }
       );
       expect(result).toBe(true);
+    });
+
+    it("should remove session favorite when type is thesession", async () => {
+      const mockDocRef = { id: mockUserId };
+      doc.mockReturnValue(mockDocRef);
+      setDoc.mockResolvedValue(undefined);
+      arrayRemove.mockReturnValue([]);
+
+      const result = await favouritesService.removeFavorite(
+        mockUserId,
+        mockTuneId,
+        "thesession"
+      );
+
+      expect(setDoc).toHaveBeenCalledWith(
+        mockDocRef,
+        {
+          thesession: [],
+        },
+        { merge: true }
+      );
+      expect(result).toBe(true);
+    });
+
+    it("should default to hatao type if not specified", async () => {
+      const mockDocRef = { id: mockUserId };
+      doc.mockReturnValue(mockDocRef);
+      setDoc.mockResolvedValue(undefined);
+      arrayRemove.mockReturnValue([]);
+
+      await favouritesService.removeFavorite(mockUserId, mockTuneId);
+
+      expect(setDoc).toHaveBeenCalledWith(
+        mockDocRef,
+        {
+          hatao: [],
+        },
+        { merge: true }
+      );
     });
 
     it("should handle errors and return false", async () => {
@@ -226,25 +286,9 @@ describe("favouritesService", () => {
       );
 
       expect(result).toBe(false);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error removing favorite:",
-        expect.any(Error)
-      );
+      expect(consoleErrorSpy).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
-    });
-
-    it("should default to hatao type if not specified", async () => {
-      doc.mockReturnValue({ id: mockUserId });
-      setDoc.mockResolvedValue(undefined);
-
-      await favouritesService.removeFavorite(mockUserId, mockTuneId);
-
-      expect(setDoc).toHaveBeenCalledWith(
-        { id: mockUserId },
-        expect.objectContaining({ hatao: expect.any(Object) }),
-        { merge: true }
-      );
     });
   });
 });

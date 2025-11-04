@@ -21,9 +21,8 @@ jest.mock("./contexts/FavoritesContext", () => ({
 }));
 
 // Create a div that accepts any prop
-const DivWithProps = ({ children, ...props }) => (
-  <div {...props}>{children}</div>
-);
+const DivWithProps = ({ children, ...props }) =>
+  React.createElement("div", props, children);
 
 // Mock MUI theme
 jest.mock("@mui/material/styles", () => ({
@@ -71,12 +70,19 @@ jest.mock("@mui/material", () => ({
     );
   },
   Grid: DivWithProps,
+  CircularProgress: () => <div>Loading...</div>,
 }));
 
 // Mock Grid2
 jest.mock("@mui/material/Grid2", () => ({
   __esModule: true,
   default: DivWithProps,
+}));
+
+// Mock NavBar component
+jest.mock("./components/NavBar", () => ({
+  __esModule: true,
+  default: () => <div>IrishWhistleTunes</div>,
 }));
 
 // Mock AccountMenu component

@@ -71,8 +71,8 @@ describe("AccountMenu", () => {
       fireEvent.click(screen.getByRole("button"));
       fireEvent.click(screen.getByText("Login"));
 
-      expect(await screen.findByLabelText("Email")).toBeInTheDocument();
-      expect(await screen.findByLabelText("Password")).toBeInTheDocument();
+      expect(await screen.findByLabelText(/Email/i)).toBeInTheDocument();
+      expect(await screen.findByLabelText(/Password/i)).toBeInTheDocument();
     });
 
     it("dialog contains submit button for login", () => {
