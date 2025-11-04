@@ -1,0 +1,7 @@
+node_modules/
+build/
+coverage/
+*.config.js
+serviceWorker.js
+reportWebVitals.js
+setupTests.js
