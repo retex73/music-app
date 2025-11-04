@@ -3,9 +3,10 @@
 
 name: Deploy to Firebase Hosting on merge
 'on':
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # Manual trigger only - uncomment push when Firebase secrets configured
+  # push:
+  #   branches:
+  #     - main
 
 permissions:
   checks: write
