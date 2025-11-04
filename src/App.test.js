@@ -28,11 +28,8 @@ const DivWithProps = ({ children, ...props }) => (
 // Mock MUI theme
 jest.mock("@mui/material/styles", () => ({
   ThemeProvider: ({ children }) => <div>{children}</div>,
-  styled: (Component) => (props) => {
-    const { children, component: Component2, ...rest } = props;
-    const FinalComponent = Component2 || Component || DivWithProps;
-    return <FinalComponent {...rest}>{children}</FinalComponent>;
-  },
+  createTheme: jest.fn(() => ({})),
+  styled: () => DivWithProps,
 }));
 
 // Mock CssBaseline
