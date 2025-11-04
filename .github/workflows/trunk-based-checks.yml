@@ -1,0 +1,114 @@
+name: Trunk-Based Development Checks
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate-workflow:
+    name: Validate Trunk-Based Workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Full history for branch analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check PR size (trunk-based: <200 lines ideal)
+        if: github.event_name == 'pull_request'
+        run: |
+          LINES=$(git diff --stat origin/main..HEAD | tail -1 | awk '{print $4}' | sed 's/[^0-9]*//g')
+          echo "PR size: $LINES lines changed"
+
+          if [ -z "$LINES" ]; then
+            echo "✅ No changes detected"
+          elif [ "$LINES" -lt 200 ]; then
+            echo "✅ PR size excellent ($LINES lines)"
+          elif [ "$LINES" -lt 500 ]; then
+            echo "⚠️ PR is large ($LINES lines). Consider splitting for faster review."
+          else
+            echo "❌ PR is very large ($LINES lines). Strongly recommend splitting."
+            echo "Trunk-based development works best with PRs <200 lines."
+          fi
+
+      - name: Check branch count (trunk-based: ≤3 active branches)
+        if: github.event_name == 'pull_request'
+        run: |
+          # Count remote branches (excluding main and current PR branch)
+          COUNT=$(git branch -r | grep "origin/" | grep -v "origin/main" | grep -v "origin/HEAD" | wc -l | tr -d ' ')
+          echo "Active remote branches: $COUNT"
+
+          if [ $COUNT -le 3 ]; then
+            echo "✅ Branch count compliant ($COUNT/3)"
+          else
+            echo "⚠️ Too many branches ($COUNT/3). Trunk-based development recommends ≤3."
+            echo "Consider merging or deleting old branches."
+          fi
+
+      - name: Run tests
+        run: npm test -- --coverage --watchAll=false
+        env:
+          CI: true
+
+      - name: Check test coverage
+        run: |
+          # Extract coverage percentage
+          COVERAGE=$(npm test -- --coverage --watchAll=false 2>&1 | grep "All files" | awk '{print $2}' | sed 's/%//')
+          echo "Test coverage: ${COVERAGE}%"
+
+          if [ ! -z "$COVERAGE" ]; then
+            if (( $(echo "$COVERAGE >= 80" | bc -l) )); then
+              echo "✅ Excellent coverage (${COVERAGE}%)"
+            elif (( $(echo "$COVERAGE >= 60" | bc -l) )); then
+              echo "✅ Good coverage (${COVERAGE}%)"
+            elif (( $(echo "$COVERAGE >= 40" | bc -l) )); then
+              echo "⚠️ Moderate coverage (${COVERAGE}%). Target: 60%+"
+            else
+              echo "⚠️ Low coverage (${COVERAGE}%). Target: 60%+"
+            fi
+          fi
+
+      - name: Build check
+        run: npm run build
+
+      - name: Check for console.log in production code
+        run: |
+          # Find console.log statements (excluding node_modules and tests)
+          COUNT=$(grep -r "console\.log" src/ --include="*.js" --include="*.jsx" --exclude-dir=__tests__ --exclude="*.test.*" | wc -l | tr -d ' ')
+
+          if [ "$COUNT" -eq 0 ]; then
+            echo "✅ No console.log statements found"
+          else
+            echo "⚠️ Found $COUNT console.log statements in production code"
+            echo "Consider using a proper logging library or removing debug logs"
+            grep -r "console\.log" src/ --include="*.js" --include="*.jsx" --exclude-dir=__tests__ --exclude="*.test.*" | head -5
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Trunk-Based Development Report"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "Workflow compliance checks completed."
+          echo "Review results above for any warnings or issues."
+          echo ""
+          echo "Trunk-based principles:"
+          echo "  ✓ Keep PRs small (<200 lines ideal)"
+          echo "  ✓ Maintain ≤3 active branches"
+          echo "  ✓ Merge daily (at least once per day)"
+          echo "  ✓ Keep main branch green (all tests pass)"
+          echo "  ✓ Delete branches immediately after merge"
