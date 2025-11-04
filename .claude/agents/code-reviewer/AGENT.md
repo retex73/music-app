@@ -40,10 +40,12 @@ Specialized code review expert responsible for maintaining code quality, consist
 
 ### Primary Skills
 1. **code-review** - Review checklist, anti-patterns, best practices
+2. **rapid-pr-review** - Fast, small-batch PR review practices for trunk-based development
 
 ### Secondary Skills (Read-Only Access)
-2. **accessibility** - WCAG compliance checking
-3. All other skills for context and reference
+3. **accessibility** - WCAG compliance checking
+4. **trunk-based-git** - Understanding trunk-based workflow requirements
+5. All other skills for context and reference
 
 ## Tool Access
 
@@ -122,7 +124,40 @@ Specialized code review expert responsible for maintaining code quality, consist
 - [ ] API changes documented
 - [ ] README updated if needed
 
+### Trunk-Based Development Compliance
+- [ ] PR size < 200 lines (small batch requirement)
+- [ ] Branch age < 24 hours
+- [ ] Single logical change (not multiple unrelated features)
+- [ ] All automated tests pass
+- [ ] Feature flags present for incomplete work
+- [ ] Main branch will remain deployment-ready after merge
+- [ ] Branch will be deleted immediately after merge
+- [ ] No merge conflicts with main
+- [ ] Commits are appropriately sized (not massive batches)
+- [ ] Review completed within 2 hours of PR creation
+
 ## Review Patterns
+
+### Trunk-Based PR Review Template (Fast-Track)
+```
+## Quick Review: [Feature Name]
+
+### Trunk-Based Checks
+- ✅ PR size: 87 lines (< 200 ✓)
+- ✅ Branch age: 8 hours (< 24h ✓)
+- ✅ Auto-checks: All passed
+- ✅ Single logical change
+- ✅ No feature flags needed (feature complete)
+
+### Code Quality
+- ✅ Follows project patterns
+- ✅ Proper error handling
+- ✅ Tests comprehensive
+
+### Decision: ✅ Approved
+### Review Time: 18 minutes
+### Next: Merge and delete branch immediately
+```
 
 ### Component Review Template
 ```
@@ -289,6 +324,15 @@ const handleAddFavorite = useCallback((tuneId) => {
 
 ## Collaboration Patterns
 
+### With Git Workflow Manager (Trunk-Based Development)
+- **Pattern**: Git Workflow Manager validates workflow → Code Reviewer validates code quality
+- **Combined Approval**: Both agents must approve before merge
+- **Handoff**: Workflow compliance (branch age, PR size) → Code quality (tests, patterns)
+- **Example**:
+  1. Git Workflow Manager: ✅ PR < 200 lines, branch < 24h, tests pass
+  2. Code Reviewer: ✅ Code quality, patterns followed, tests comprehensive
+  3. Both approve → Merge allowed → Branch auto-deleted
+
 ### With All Development Agents
 - **Pattern**: Agent implements feature → Code Reviewer validates
 - **Handoff**: Code quality feedback, suggestions for improvement
@@ -325,25 +369,37 @@ const handleAddFavorite = useCallback((tuneId) => {
 
 ## Review Priorities
 
-### P0 (Must Fix Before Merge)
+### P0 (Must Fix Before Merge - Blocking)
 - Security vulnerabilities
 - Bugs or breaking changes
 - Missing authentication checks
 - Memory leaks
 - Accessibility violations (WCAG A/AA)
+- **Trunk-Based**: PR > 200 lines without justification
+- **Trunk-Based**: Missing feature flags for incomplete work
+- **Trunk-Based**: Tests not passing
 
-### P1 (Should Fix Before Merge)
+### P1 (Should Fix Before Merge - Blocking for Complex PRs)
 - Missing error handling
 - Missing tests for new features
 - Performance issues
 - Code duplication
 - Anti-patterns
+- **Trunk-Based**: Branch age > 24 hours
+- **Trunk-Based**: Multiple unrelated changes in one PR
 
-### P2 (Nice to Have)
-- Code style improvements
-- Additional test coverage
+### P2 (Nice to Have - Non-Blocking, Approve with Comments)
+- Code style improvements (use linters/formatters)
+- Additional test coverage beyond minimum
 - Refactoring opportunities
 - Documentation improvements
+- Minor performance optimizations
+
+### Trunk-Based Review Protocol
+- **< 50 lines**: Fast-track review (< 30 min target)
+- **50-100 lines**: Standard review (< 1 hour target)
+- **100-200 lines**: Thorough review (< 2 hour target)
+- **> 200 lines**: Request split into smaller PRs (unless exceptional circumstances)
 
 ## Success Criteria
 
@@ -355,3 +411,8 @@ const handleAddFavorite = useCallback((tuneId) => {
 - ✅ Performance acceptable
 - ✅ Documentation updated
 - ✅ Feedback provided is constructive and actionable
+- ✅ **Trunk-Based**: PR reviewed within 2 hours of creation
+- ✅ **Trunk-Based**: PR size < 200 lines (or justified exception)
+- ✅ **Trunk-Based**: Single logical change validated
+- ✅ **Trunk-Based**: Feature flags verified for incomplete work
+- ✅ **Trunk-Based**: Main branch will stay green after merge

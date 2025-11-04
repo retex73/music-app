@@ -4,7 +4,7 @@ A comprehensive agent and skills system for Claude Code, designed specifically f
 
 ## Overview
 
-**8 Specialized Agents** + **19 Modular Skills** = Complete AI Development Team
+**9 Specialized Agents** + **23 Modular Skills** = Complete AI Development Team
 
 This system enables Claude Code to act as a full web development team with specialized knowledge in:
 - React + Material-UI frontend development
@@ -14,6 +14,7 @@ This system enables Claude Code to act as a full web development team with speci
 - Performance optimization
 - DevOps and deployment
 - Code review and architecture
+- **Trunk-based git workflow** (enforces continuous integration best practices)
 
 ## Quick Start
 
@@ -72,16 +73,22 @@ No configuration needed! The agents and skills are automatically available when 
 ### Cross-Cutting Agents
 
 #### 7. Code Reviewer
-**Role**: PR reviews, consistency, best practices
+**Role**: PR reviews, consistency, best practices, trunk-based PR validation
 **Triggers**: Pull requests, code reviews, quality checks
-**Skills**: code-review, accessibility, all skills (read-only)
-**Use for**: Code reviews, quality audits, consistency checks
+**Skills**: code-review, rapid-pr-review, accessibility, trunk-based-git, all skills (read-only)
+**Use for**: Code reviews, quality audits, consistency checks, trunk-based PR validation
 
 #### 8. Technical Architect
 **Role**: System design, architecture, technical strategy
 **Triggers**: Architecture questions, refactoring, new features
 **Skills**: react-hooks, data-services, routing, all skills (context)
 **Use for**: Architectural decisions, system design, refactoring planning
+
+#### 9. Git Workflow Manager
+**Role**: Trunk-based development enforcement, git workflow guardian
+**Triggers**: Branch operations, merges, commits, workflow violations
+**Skills**: trunk-based-git, feature-flags, git-hygiene
+**Use for**: Enforcing ≤3 branches, daily merges, workflow compliance, feature flag guidance
 
 ## Skills Library
 
@@ -113,10 +120,16 @@ No configuration needed! The agents and skills are automatically available when 
 - **code-review**: Review checklist, anti-patterns, feedback patterns
 - **performance**: React.memo, useMemo, useCallback, lazy loading
 - **accessibility**: WCAG compliance, ARIA, keyboard navigation
+- **rapid-pr-review**: Fast PR reviews, small-batch protocols, trunk-based review (NEW!)
 
 ### Dev Skills
 - **dnd-patterns**: DND Kit integration, sortable lists, reordering
 - **error-handling**: Error boundaries, try-catch, user feedback
+
+### Git & Workflow Skills (NEW!)
+- **trunk-based-git**: Trunk-based development workflow, branch management, merge strategies
+- **feature-flags**: Feature toggles for incomplete work, environment-based flags
+- **git-hygiene**: Branch cleanup automation, commit quality, repository maintenance
 
 ## Usage Examples
 
@@ -176,25 +189,55 @@ No configuration needed! The agents and skills are automatically available when 
 4. Creates comprehensive test suite
 5. Verifies coverage >80%
 
+### Example 5: Trunk-Based Workflow (NEW!)
+
+**User Request**: "I want to start working on a playlist feature but won't finish today"
+
+**Agents Activated**: Git Workflow Manager + Frontend Component Architect
+**Skills Used**: trunk-based-git, feature-flags, mui-patterns
+
+**Process**:
+1. **Git Workflow Manager**: Checks branch count (currently 2/3 - OK to proceed)
+2. **Git Workflow Manager**: Creates branch `feature/playlists`
+3. **Frontend Component Architect**: Builds playlist UI components
+4. **Git Workflow Manager**: At EOD, detects incomplete feature
+5. **Git Workflow Manager**: Suggests wrapping in feature flag
+6. **Git Workflow Manager**: Helps implement flag in `featureFlags.js`
+7. **Frontend Component Architect**: Wraps components: `{FEATURE_FLAGS.PLAYLISTS && <PlaylistUI />}`
+8. **Git Workflow Manager**: Verifies tests pass with flag disabled
+9. **Git Workflow Manager**: Creates PR (87 lines, <24h old)
+10. **Code Reviewer**: Fast-track review (< 30 min)
+11. **Both approve**: Merge to main (flag disabled in production)
+12. **Git Workflow Manager**: Auto-deletes branch
+13. **Result**: Daily merge achieved, main stays green, work continues tomorrow!
+
 ## How Agents Collaborate
 
 ### Multi-Agent Workflows
 
-**Adding a New Feature (e.g., Playlists)**:
-1. **Technical Architect**: Designs data model and component structure
-2. **Frontend Component Architect**: Builds UI components
-3. **Firebase Backend Engineer**: Implements Firestore operations
-4. **Music Domain Expert**: Integrates tune data and playback
-5. **Quality Assurance Engineer**: Writes comprehensive tests
-6. **Code Reviewer**: Reviews implementation for quality
-7. **Performance Engineer**: Optimizes if needed
-8. **DevOps Engineer**: Deploys to production
+**Adding a New Feature (e.g., Playlists) - Trunk-Based Workflow**:
+1. **Git Workflow Manager**: Validates ≤3 branches, creates feature branch
+2. **Technical Architect**: Designs data model and component structure
+3. **Frontend Component Architect**: Builds UI components (Day 1 - partial)
+4. **Git Workflow Manager**: Wraps in feature flag, merges to main (EOD)
+5. **Firebase Backend Engineer**: Implements Firestore operations (Day 2)
+6. **Git Workflow Manager**: Merges to main again (EOD)
+7. **Music Domain Expert**: Integrates tune data and playback (Day 3)
+8. **Quality Assurance Engineer**: Writes comprehensive tests
+9. **Git Workflow Manager**: Final merge, enables feature flag
+10. **Code Reviewer**: Reviews each daily PR (<2h each)
+11. **Performance Engineer**: Optimizes if needed
+12. **DevOps Engineer**: Deploys to production (main always ready!)
 
-**Fixing a Bug**:
-1. **Code Reviewer**: Identifies issue and scope
-2. **Appropriate Agent**: Implements fix (Frontend/Backend/etc.)
-3. **Quality Assurance Engineer**: Adds regression test
-4. **Code Reviewer**: Verifies fix quality
+**Fixing a Bug - Trunk-Based**:
+1. **Git Workflow Manager**: Creates hotfix branch
+2. **Code Reviewer**: Identifies issue and scope
+3. **Appropriate Agent**: Implements minimal fix (Frontend/Backend/etc.)
+4. **Quality Assurance Engineer**: Adds regression test
+5. **Git Workflow Manager**: Creates PR, fast-track review
+6. **Code Reviewer**: Approves within 30 minutes
+7. **Git Workflow Manager**: Merges and deletes branch
+8. **Total time**: < 2 hours from bug to production fix
 
 ## Best Practices
 
@@ -205,6 +248,41 @@ No configuration needed! The agents and skills are automatically available when 
 3. **One Agent at a Time**: Let agents focus on their domain
 4. **Review Output**: Agents provide suggestions, you make final decisions
 5. **Iterate**: Agents can refine based on feedback
+
+### For Trunk-Based Development (NEW!)
+
+**Core Rules** (enforced by Git Workflow Manager):
+1. **≤3 active branches** at any time
+2. **Merge to main daily** (at least once per day)
+3. **Small PRs** (< 200 lines for fast review)
+4. **Delete branches immediately** after merge
+5. **Use feature flags** for incomplete work
+6. **Main always green** (all tests pass)
+7. **Fast reviews** (< 2 hour target)
+
+**Daily Workflow**:
+```
+Morning:
+1. Check branch count (Git Workflow Manager)
+2. Create/resume feature branch
+3. Make small commits throughout day
+
+Evening:
+4. If feature incomplete → wrap in feature flag
+5. Create PR (< 200 lines)
+6. Get fast review (< 2 hours)
+7. Merge to main
+8. Delete branch
+9. Repeat tomorrow!
+```
+
+**Benefits**:
+- ✅ Continuous integration (merge daily)
+- ✅ Fast feedback (reviews < 2h)
+- ✅ Low risk (small changes)
+- ✅ Always deployable (main stays green)
+- ✅ No merge hell (daily integration)
+- ✅ Simple git history (linear)
 
 ### For Extending the System
 
@@ -249,7 +327,9 @@ No configuration needed! The agents and skills are automatically available when 
 │   │   └── AGENT.md
 │   ├── code-reviewer/
 │   │   └── AGENT.md
-│   └── technical-architect/
+│   ├── technical-architect/
+│   │   └── AGENT.md
+│   └── git-workflow-manager/
 │       └── AGENT.md
 └── skills/
     ├── mui-patterns/
@@ -288,7 +368,15 @@ No configuration needed! The agents and skills are automatically available when 
     │   └── SKILL.md
     ├── dnd-patterns/
     │   └── SKILL.md
-    └── error-handling/
+    ├── error-handling/
+    │   └── SKILL.md
+    ├── trunk-based-git/
+    │   └── SKILL.md
+    ├── feature-flags/
+    │   └── SKILL.md
+    ├── git-hygiene/
+    │   └── SKILL.md
+    └── rapid-pr-review/
         └── SKILL.md
 ```
 
@@ -313,6 +401,15 @@ No configuration needed! The agents and skills are automatically available when 
 - Built-in code review and testing
 - Performance optimization from the start
 - Accessibility compliance by default
+
+### Trunk-Based Development (NEW!)
+- **Continuous Integration**: Daily merges eliminate integration nightmares
+- **Fast Feedback**: < 2 hour PR reviews accelerate development
+- **Low Risk**: Small, frequent changes reduce deployment risk
+- **Always Deployable**: Main branch ready for production at all times
+- **Simplified Workflow**: Linear git history, no complex branching strategies
+- **Team Velocity**: No blocking on long-lived feature branches
+- **Feature Flags**: Ship incomplete work safely
 
 ## Troubleshooting
 
@@ -359,7 +456,16 @@ To improve this agent system:
 
 ## Version History
 
-- **v1.0** (Current): Initial agent team with 8 agents and 19 skills
+- **v1.1** (Current): Trunk-based development integration
+  - **New Agent**: Git Workflow Manager (enforces trunk-based practices)
+  - **Enhanced Agent**: Code Reviewer (trunk-based PR validation)
+  - **New Skills**: trunk-based-git, feature-flags, git-hygiene, rapid-pr-review
+  - Enforces ≤3 active branches, daily merges, small PRs (<200 lines)
+  - Feature flag support for incomplete work
+  - Fast PR reviews (<2 hour target)
+  - Total: 9 agents + 23 skills
+
+- **v1.0**: Initial agent team with 8 agents and 19 skills
   - Complete web development team
   - Music domain specialization
   - Firebase integration
