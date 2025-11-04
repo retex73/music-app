@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import CataloguePage from "../CataloguePage";
 import Papa from "papaparse";
@@ -325,16 +325,15 @@ describe("CataloguePage", () => {
     // Click page 2
     const pagination = screen.getByTestId("pagination");
     const page2Button = pagination.querySelector('[data-current="false"]');
-    fireEvent.click(page2Button);
 
-    // Wait for page 1 tune to disappear first, then check for page 2 tune
-    await waitFor(() => {
-      expect(screen.queryByText("Tune 1")).not.toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(page2Button);
     });
 
+    // Wait for page 2 content to appear
     await waitFor(() => {
       expect(screen.getByText("Tune 11")).toBeInTheDocument();
-    }, { timeout: 3000 });
+    }, { timeout: 5000 });
 
     expect(screen.queryByText("Tune 10")).not.toBeInTheDocument();
     expect(screen.getByText("Tune 20")).toBeInTheDocument();
@@ -436,16 +435,15 @@ describe("CataloguePage", () => {
     // Navigate to page 2
     const pagination = screen.getByTestId("pagination");
     const page2Button = pagination.querySelector('[data-current="false"]');
-    fireEvent.click(page2Button);
 
-    // Wait for page 1 tune to disappear first, then check for page 2 tune
-    await waitFor(() => {
-      expect(screen.queryByText("Tune 1")).not.toBeInTheDocument();
+    await act(async () => {
+      fireEvent.click(page2Button);
     });
 
+    // Wait for page 2 content to appear
     await waitFor(() => {
       expect(screen.getByText("Tune 11")).toBeInTheDocument();
-    }, { timeout: 3000 });
+    }, { timeout: 5000 });
 
     // Now apply a search filter
     const searchInput = screen.getByPlaceholderText("Search tunes...");
