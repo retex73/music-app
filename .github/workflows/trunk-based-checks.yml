@@ -43,7 +43,7 @@ jobs:
             echo "Trunk-based development works best with PRs <200 lines."
           fi
 
-      - name: Check branch count (trunk-based: ≤3 active branches)
+      - name: "Check branch count (trunk-based: ≤3 active branches)"
         if: github.event_name == 'pull_request'
         run: |
           # Count remote branches (excluding main and current PR branch)
