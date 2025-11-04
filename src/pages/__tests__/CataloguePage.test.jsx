@@ -146,9 +146,9 @@ describe("CataloguePage", () => {
     });
 
     // Mock PapaParse
-    Papa.parse.mockReturnValue({
+    Papa.parse.mockImplementation((csvText, options) => ({
       data: mockTunesData,
-    });
+    }));
   });
 
   it("should load and display list of all tunes", async () => {
@@ -307,9 +307,9 @@ describe("CataloguePage", () => {
       username: "user",
     }));
 
-    Papa.parse.mockReturnValue({
+    Papa.parse.mockImplementation((csvText, options) => ({
       data: manyTunes,
-    });
+    }));
 
     renderWithRouter(<CataloguePage />);
 
@@ -418,9 +418,9 @@ describe("CataloguePage", () => {
       username: "user",
     }));
 
-    Papa.parse.mockReturnValue({
+    Papa.parse.mockImplementation((csvText, options) => ({
       data: manyTunes,
-    });
+    }));
 
     renderWithRouter(<CataloguePage />);
 
