@@ -1,5 +1,7 @@
 name: Deploy to Firebase Hosting on PR
-'on': pull_request
+'on':
+  workflow_dispatch:  # Manual trigger only - uncomment pull_request when Firebase secrets configured
+  # pull_request
 
 permissions:
   actions: write
