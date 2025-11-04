@@ -158,6 +158,7 @@ const AccountMenu = () => {
             {dialogType !== "delete" && (
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <TextField
+                  id="email"
                   label="Email"
                   type="email"
                   value={email}
@@ -166,6 +167,7 @@ const AccountMenu = () => {
                 />
                 {dialogType !== "reset" && (
                   <TextField
+                    id="password"
                     label="Password"
                     type="password"
                     value={password}
