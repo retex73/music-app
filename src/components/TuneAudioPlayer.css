@@ -1,419 +1,201 @@
 /* Import the base abcjs audio styles */
 @import 'abcjs/abcjs-audio.css';
 
-/* ============================================================================
-   CSS Custom Properties for Theme Integration
-   ============================================================================ */
-:root {
-  --abcjs-player-bg: #141419;              /* MUI dark theme paper */
-  --abcjs-player-text: rgba(255, 255, 255, 0.87);  /* MUI text primary */
-  --abcjs-player-text-secondary: rgba(255, 255, 255, 0.6);  /* MUI text secondary */
-  --abcjs-player-accent: #FF6B35;          /* MUI primary.main */
-  --abcjs-button-bg: rgba(255, 255, 255, 0.04);  /* MUI button background */
-  --abcjs-button-border: rgba(255, 255, 255, 0.12);  /* MUI divider */
-  --abcjs-button-hover: rgba(255, 255, 255, 0.08);  /* MUI hover state */
-  --abcjs-button-active: rgba(255, 255, 255, 0.12);  /* MUI active state */
-  --abcjs-focus-ring: rgba(255, 107, 53, 0.5);  /* Primary with opacity */
-}
-
-/* ============================================================================
-   Main Audio Container
-   ============================================================================ */
 .abcjs-audio-container .abcjs-inline-audio {
-  background: var(--abcjs-player-bg) !important;
-  color: var(--abcjs-player-text) !important;
   height: auto !important;
-  margin: 8px 0 !important;
-  padding: 12px 16px !important;
-  border-radius: 8px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 12px !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
-}
-
-/* ============================================================================
-   Control Buttons - MUI Styled
-   ============================================================================ */
-.abcjs-audio-container .abcjs-inline-audio button,
-.abcjs-audio-container .abcjs-btn {
-  /* Layout and sizing */
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  min-width: 36px !important;
-  min-height: 36px !important;
-  width: 36px !important;
-  height: 36px !important;
+  margin: 8px 0;
+  display: grid !important;
+  grid-template-areas:
+    "controls sheet-music"
+    "tempo repeat" !important;
+  grid-template-columns: auto 1fr !important;
+  gap: 8px 16px !important;
+  align-items: center;
   padding: 8px !important;
-  margin: 0 4px !important;
-
-  /* MUI button styling */
-  background: var(--abcjs-button-bg) !important;
-  border: 1px solid var(--abcjs-button-border) !important;
-  border-radius: 20px !important;  /* MUI pill shape */
-  color: var(--abcjs-player-text) !important;
-
-  /* Smooth transitions */
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  cursor: pointer !important;
 }
 
-/* Button hover state */
-.abcjs-audio-container .abcjs-inline-audio button:hover,
-.abcjs-audio-container .abcjs-btn:hover {
-  background: var(--abcjs-button-hover) !important;
-  border-color: rgba(255, 255, 255, 0.20) !important;
-  transform: scale(1.02) !important;
+/* Play controls group */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-play-controls {
+  grid-area: controls;
+  display: flex;
+  gap: 4px;
 }
 
-/* Button active state */
-.abcjs-audio-container .abcjs-inline-audio button:active,
-.abcjs-audio-container .abcjs-btn:active {
-  background: var(--abcjs-button-active) !important;
-  transform: scale(0.98) !important;
+/* Progress bar group */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-progress-controls {
+  grid-area: tempo;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
 }
 
-/* Button focus state - WCAG AA compliant */
-.abcjs-audio-container .abcjs-inline-audio button:focus,
-.abcjs-audio-container .abcjs-btn:focus {
-  outline: 2px solid var(--abcjs-player-accent) !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 4px var(--abcjs-focus-ring) !important;
+/* Style the built-in warp control */
+.abcjs-audio-container .abcjs-warp-canvas {
+  display: flex !important;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  margin-top: 8px;
 }
 
-/* Remove focus outline for mouse users (but keep for keyboard) */
-.abcjs-audio-container .abcjs-inline-audio button:focus:not(:focus-visible),
-.abcjs-audio-container .abcjs-btn:focus:not(:focus-visible) {
-  outline: none !important;
-  box-shadow: none !important;
+/* Style the warp slider input */
+.abcjs-audio-container input[type='range'].abcjs-warp-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
 }
 
-/* Pushed/Active toggle state (e.g., loop button) */
-.abcjs-audio-container .abcjs-btn.abcjs-pushed {
-  background: rgba(255, 107, 53, 0.16) !important;
-  border-color: var(--abcjs-player-accent) !important;
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.4);
 }
 
-/* ============================================================================
-   SVG Icons - Properly Sized and Centered
-   ============================================================================ */
-.abcjs-audio-container .abcjs-inline-audio button svg,
-.abcjs-audio-container .abcjs-btn svg,
-.abcjs-audio-container .abcjs-play-svg,
-.abcjs-audio-container .abcjs-pause-svg,
-.abcjs-audio-container .abcjs-loading-svg {
-  /* Constrain icon size - THIS FIXES THE CRAMPED ICONS ISSUE */
-  width: 20px !important;
-  height: 20px !important;
-  max-width: 20px !important;
-  max-height: 20px !important;
-
-  /* Center the icon */
-  margin: auto !important;
-
-  /* Icon color */
-  fill: var(--abcjs-player-text) !important;
-  stroke: var(--abcjs-player-text) !important;
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.4);
 }
 
-/* ============================================================================
-   Progress Bar - Improved Visibility and Interaction
-   ============================================================================ */
+/* Progress bar styling */
 .abcjs-audio-container .abcjs-midi-progress-background {
-  /* Container styling */
-  background: rgba(255, 255, 255, 0.08) !important;
-  height: 8px !important;
-  border-radius: 4px !important;
-  border: 1px solid rgba(255, 255, 255, 0.23) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  height: 10px !important;
+  border-radius: 12px !important;
+  margin: 0 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
   position: relative !important;
-  margin: 0 !important;
-  cursor: pointer !important;
-  flex: 1 !important;
-  min-width: 100px !important;
-
-  /* Z-index stacking */
-  z-index: 1 !important;
 }
 
-/* Progress indicator (filled portion) */
 .abcjs-audio-container .abcjs-midi-progress-indicator {
-  background: var(--abcjs-player-accent) !important;
+  background: #FF6B35 !important;
   height: 100% !important;
-  border-radius: 4px !important;
+  border-radius: 12px !important;
   transition: width 0.1s linear !important;
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  pointer-events: none !important;
-  z-index: 2 !important;
 }
 
-/* Range input (invisible but interactive) */
+/* Handle (thumb) styling */
 .abcjs-audio-container .abcjs-midi-progress-background input[type='range'] {
   -webkit-appearance: none !important;
-  appearance: none !important;
   width: 100% !important;
-  height: 100% !important;
+  height: 10px !important;
   background: transparent !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
   margin: 0 !important;
-  padding: 0 !important;
   cursor: pointer !important;
-  z-index: 3 !important;
 }
 
-/* Remove default focus outline on range input */
-.abcjs-audio-container .abcjs-midi-progress-background input[type='range']:focus {
-  outline: none !important;
-}
-
-/* Range slider thumb - WebKit (Chrome, Safari, Edge) */
 .abcjs-audio-container .abcjs-midi-progress-background input[type='range']::-webkit-slider-thumb {
   -webkit-appearance: none !important;
-  appearance: none !important;
-  width: 16px !important;
   height: 16px !important;
+  width: 16px !important;
   border-radius: 50% !important;
   background: #FFFFFF !important;
-  border: 2px solid var(--abcjs-player-accent) !important;
+  border: 2px solid #FF6B35 !important;
   cursor: pointer !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-  transition: transform 0.2s ease !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+  margin-top: -3px !important;
 }
 
-/* Range slider thumb - Firefox */
-.abcjs-audio-container .abcjs-midi-progress-background input[type='range']::-moz-range-thumb {
-  width: 16px !important;
+.abcjs-midi-progress-background input[type='range']::-moz-range-thumb {
   height: 16px !important;
+  width: 16px !important;
   border-radius: 50% !important;
   background: #FFFFFF !important;
-  border: 2px solid var(--abcjs-player-accent) !important;
+  border: 2px solid #FF6B35 !important;
   cursor: pointer !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-  transition: transform 0.2s ease !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Hover effect on thumb */
-.abcjs-audio-container .abcjs-midi-progress-background input[type='range']:hover::-webkit-slider-thumb {
-  transform: scale(1.2) !important;
-  box-shadow: 0 3px 12px rgba(255, 107, 53, 0.5) !important;
+/* Style the control buttons to match MUI dark theme */
+.abcjs-audio-container .abcjs-inline-audio button {
+  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  margin: 0 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  color: #FFFFFF;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.abcjs-audio-container .abcjs-midi-progress-background input[type='range']:hover::-moz-range-thumb {
-  transform: scale(1.2) !important;
-  box-shadow: 0 3px 12px rgba(255, 107, 53, 0.5) !important;
+/* Fix icon sizing - constrain SVG icons to prevent cramping */
+.abcjs-audio-container .abcjs-inline-audio button svg {
+  width: 20px !important;
+  height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
 }
 
-/* Active state on thumb */
-.abcjs-audio-container .abcjs-midi-progress-background input[type='range']:active::-webkit-slider-thumb {
-  transform: scale(1.1) !important;
+.abcjs-audio-container .abcjs-inline-audio button:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
-.abcjs-audio-container .abcjs-midi-progress-background input[type='range']:active::-moz-range-thumb {
-  transform: scale(1.1) !important;
+/* Remove focus outline */
+.abcjs-midi-progress-background input[type='range']:focus {
+  outline: none;
 }
 
-/* ============================================================================
-   Time Display (Clock)
-   ============================================================================ */
-.abcjs-audio-container .abcjs-midi-clock {
-  color: var(--abcjs-player-text-secondary) !important;
-  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
-  font-size: 14px !important;
-  white-space: nowrap !important;
-  margin-left: 12px !important;
+/* Hover state for the handle */
+.abcjs-midi-progress-background input[type='range']:hover::-webkit-slider-thumb {
+  transform: scale(1.1);
 }
 
-/* ============================================================================
-   Tempo Control
-   ============================================================================ */
-.abcjs-audio-container .abcjs-midi-tempo {
-  width: 48px !important;
-  background: var(--abcjs-button-bg) !important;
-  color: var(--abcjs-player-text) !important;
-  border: 1px solid var(--abcjs-button-border) !important;
-  border-radius: 4px !important;
-  padding: 4px 8px !important;
-  font-size: 14px !important;
-  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif !important;
-  text-align: center !important;
-  transition: border-color 0.2s ease !important;
+.abcjs-midi-progress-background input[type='range']:hover::-moz-range-thumb {
+  transform: scale(1.1);
 }
 
-.abcjs-audio-container .abcjs-midi-tempo:hover {
-  border-color: rgba(255, 255, 255, 0.30) !important;
+/* Disabled state */
+.abcjs-inline-audio.disabled {
+  opacity: 0.7;
+  pointer-events: none;
 }
 
-.abcjs-audio-container .abcjs-midi-tempo:focus {
-  outline: 2px solid var(--abcjs-player-accent) !important;
-  outline-offset: 2px !important;
-  border-color: var(--abcjs-player-accent) !important;
+/* Time display */
+.abcjs-midi-clock {
+  color: rgba(255, 255, 255, 0.7); /* text.secondary color */
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
-/* ============================================================================
-   Warp Slider Control
-   ============================================================================ */
-.abcjs-audio-container .abcjs-warp-canvas {
-  display: flex !important;
-  align-items: center !important;
-  gap: 12px !important;
-  padding: 8px 0 !important;
-  margin-top: 4px !important;
+/* Selection and hover states */
+.abcjs-audio-container .abcjs-inline-audio button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.5); /* primary.main with opacity */
 }
 
-.abcjs-audio-container input[type='range'].abcjs-warp-slider {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  flex: 1 !important;
-  height: 4px !important;
-  border-radius: 4px !important;
-  background: rgba(255, 255, 255, 0.3) !important;
-  outline: none !important;
-  cursor: pointer !important;
+.abcjs-audio-container .abcjs-inline-audio button:active {
+  background: rgba(255, 255, 255, 0.12);
 }
 
-.abcjs-audio-container input[type='range'].abcjs-warp-slider::-webkit-slider-thumb {
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  background: #FFFFFF !important;
-  cursor: pointer !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
-  transition: transform 0.2s ease !important;
-}
-
-.abcjs-audio-container input[type='range'].abcjs-warp-slider::-moz-range-thumb {
-  width: 16px !important;
-  height: 16px !important;
-  border-radius: 50% !important;
-  background: #FFFFFF !important;
-  border: none !important;
-  cursor: pointer !important;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
-  transition: transform 0.2s ease !important;
-}
-
-.abcjs-audio-container input[type='range'].abcjs-warp-slider:hover::-webkit-slider-thumb,
-.abcjs-audio-container input[type='range'].abcjs-warp-slider:hover::-moz-range-thumb {
-  transform: scale(1.2) !important;
-}
-
-/* ============================================================================
-   Layout Organization
-   ============================================================================ */
-
-/* Main controls row (buttons + progress + clock) */
-.abcjs-audio-container .abcjs-inline-audio > div:first-child {
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  width: 100% !important;
-}
-
-/* ============================================================================
-   Disabled State
-   ============================================================================ */
-.abcjs-audio-container .abcjs-inline-audio.disabled {
-  opacity: 0.6 !important;
-  pointer-events: none !important;
-}
-
-/* ============================================================================
-   Note Interaction Styles
-   ============================================================================ */
-
-/* Cursor line during playback */
+/* Cursor and highlighting styles */
 .abcjs-cursor {
-  stroke: var(--abcjs-player-accent) !important;
-  stroke-width: 2 !important;
-  pointer-events: none !important;
+  stroke: red;
+  stroke-width: 2;
 }
 
-/* Note highlighting during playback */
 .highlight {
-  fill: #0a9ecc !important;
-  opacity: 0.8 !important;
+  fill: #0a9ecc;
 }
 
-/* Clickable notes */
+/* Click interaction */
 .abcjs-note {
-  cursor: pointer !important;
-  transition: opacity 0.2s ease !important;
-}
-
-.abcjs-note:hover {
-  opacity: 0.7 !important;
-}
-
-/* ============================================================================
-   Responsive Design
-   ============================================================================ */
-
-/* Mobile devices (< 600px) */
-@media (max-width: 599px) {
-  .abcjs-audio-container .abcjs-inline-audio {
-    padding: 12px !important;
-  }
-
-  .abcjs-audio-container .abcjs-inline-audio button,
-  .abcjs-audio-container .abcjs-btn {
-    /* Larger touch targets for mobile */
-    min-width: 44px !important;
-    min-height: 44px !important;
-    width: 44px !important;
-    height: 44px !important;
-  }
-
-  .abcjs-audio-container .abcjs-inline-audio button svg,
-  .abcjs-audio-container .abcjs-btn svg {
-    width: 22px !important;
-    height: 22px !important;
-  }
-
-  .abcjs-audio-container .abcjs-midi-clock {
-    font-size: 12px !important;
-  }
-}
-
-/* Tablet and up (≥ 600px) */
-@media (min-width: 600px) {
-  .abcjs-audio-container .abcjs-inline-audio {
-    padding: 12px 20px !important;
-  }
-}
-
-/* Desktop (≥ 960px) */
-@media (min-width: 960px) {
-  .abcjs-audio-container .abcjs-inline-audio {
-    padding: 16px 24px !important;
-  }
-}
-
-/* ============================================================================
-   Accessibility - Reduced Motion
-   ============================================================================ */
-@media (prefers-reduced-motion: reduce) {
-  .abcjs-audio-container .abcjs-inline-audio button,
-  .abcjs-audio-container .abcjs-btn,
-  .abcjs-audio-container .abcjs-midi-progress-indicator,
-  .abcjs-audio-container input[type='range']::-webkit-slider-thumb,
-  .abcjs-audio-container input[type='range']::-moz-range-thumb,
-  .abcjs-note,
-  .highlight {
-    transition: none !important;
-  }
-}
-
-/* ============================================================================
-   Print Styles
-   ============================================================================ */
-@media print {
-  .abcjs-audio-container {
-    display: none !important;
-  }
+  cursor: pointer;
 }
