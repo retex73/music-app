@@ -141,8 +141,11 @@
 .abcjs-audio-container .abcjs-inline-audio button svg {
   width: 20px !important;
   height: 20px !important;
+  min-height: 20px !important;  /* Override MUI Card's min-height: 200px */
   max-width: 20px !important;
   max-height: 20px !important;
+  margin: 0 !important;  /* Override MUI Card's margin-bottom: 40px */
+  display: block !important;
 }
 
 .abcjs-audio-container .abcjs-inline-audio button:hover {
