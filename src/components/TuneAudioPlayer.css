@@ -122,30 +122,41 @@
 
 /* Style the control buttons to match MUI dark theme */
 .abcjs-audio-container .abcjs-inline-audio button {
-  padding: 0;
+  padding: 0 !important;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 50%;
   margin: 0 2px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
   color: #FFFFFF;
   transition: background-color 0.2s ease-in-out;
+  box-sizing: border-box !important;
 }
 
-/* Fix icon sizing - constrain SVG icons to prevent cramping */
+/* Fix icon sizing and centering - constrain SVG icons to prevent cramping */
 .abcjs-audio-container .abcjs-inline-audio button svg {
-  width: 20px !important;
-  height: 20px !important;
-  min-height: 20px !important;  /* Override MUI Card's min-height: 200px */
-  max-width: 20px !important;
-  max-height: 20px !important;
-  margin: 0 !important;  /* Override MUI Card's margin-bottom: 40px */
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  margin: 0 !important;
+  padding: 0 !important;
   display: block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure proper centering by targeting the Font Awesome SVG structure */
+.abcjs-audio-container .abcjs-inline-audio button svg path {
+  transform-origin: center !important;
 }
 
 .abcjs-audio-container .abcjs-inline-audio button:hover {
