@@ -122,17 +122,17 @@
 
 /* Style the control buttons to match MUI dark theme */
 .abcjs-audio-container .abcjs-inline-audio button {
-  padding: 4px 8px;
+  padding: 0;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
+  border-radius: 50%;
   margin: 0 2px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  min-height: 32px;
+  width: 32px;
+  height: 32px;
   color: #FFFFFF;
   transition: background-color 0.2s ease-in-out;
 }
