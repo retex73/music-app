@@ -4,13 +4,11 @@
 .abcjs-audio-container .abcjs-inline-audio {
   height: auto !important;
   margin: 8px 0;
-  display: grid !important;
-  grid-template-areas:
-    "controls sheet-music"
-    "tempo repeat" !important;
-  grid-template-columns: auto 1fr !important;
-  gap: 8px 16px !important;
-  align-items: center;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
   padding: 16px !important;
 }
 
@@ -65,9 +63,11 @@
   background: rgba(255, 255, 255, 0.04) !important;
   height: 10px !important;
   border-radius: 12px !important;
-  margin: 0 4px !important;
+  margin: 0 !important;
   border: 1px solid rgba(255, 255, 255, 0.12) !important;
   position: relative !important;
+  flex: 1 1 200px !important; /* Allow progress bar to grow but with min width */
+  min-width: 100px !important;
 }
 
 .abcjs-audio-container .abcjs-midi-progress-indicator {
@@ -118,7 +118,7 @@
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 50%;
-  margin: 0 8px;
+  margin: 0 !important; /* Remove margin since we're using gap */
   cursor: pointer;
   display: flex !important;
   align-items: center !important;
@@ -172,7 +172,7 @@
 
 /* Add spacing between button groups - restart button has extra left margin */
 .abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-reset {
-  margin-left: 16px !important;
+  margin-left: 8px !important; /* Reduced since we have gap now */
 }
 
 .abcjs-audio-container .abcjs-inline-audio button:hover {
@@ -203,6 +203,20 @@
 .abcjs-midi-clock {
   color: rgba(255, 255, 255, 0.7); /* text.secondary color */
   font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif;
+  white-space: nowrap !important; /* Prevent time from wrapping */
+}
+
+/* Tempo/BPM display styling */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-tempo-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+/* Group controls on a single line */
+.abcjs-audio-container .abcjs-inline-audio > * {
+  flex-shrink: 0; /* Prevent controls from shrinking */
 }
 
 /* Selection and hover states */
