@@ -1,0 +1,245 @@
+/* Import the base abcjs audio styles */
+@import 'abcjs/abcjs-audio.css';
+
+.abcjs-audio-container .abcjs-inline-audio {
+  height: auto !important;
+  margin: 8px 0;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  padding: 16px !important;
+}
+
+/* Control buttons layout - using actual abcjs classes */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-btn {
+  /* Buttons are flex containers for proper icon centering */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Style the built-in warp control */
+.abcjs-audio-container .abcjs-warp-canvas {
+  display: flex !important;
+  align-items: center;
+  gap: 16px;
+  padding: 0 16px;
+  margin-top: 8px;
+}
+
+/* Style the warp slider input */
+.abcjs-audio-container input[type='range'].abcjs-warp-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+}
+
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.4);
+}
+
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 0 2px 12px 0 rgba(0,0,0,0.4);
+}
+
+/* Progress bar styling */
+.abcjs-audio-container .abcjs-midi-progress-background {
+  background: rgba(255, 255, 255, 0.04) !important;
+  height: 10px !important;
+  border-radius: 12px !important;
+  margin: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  position: relative !important;
+  flex: 1 1 200px !important; /* Allow progress bar to grow but with min width */
+  min-width: 100px !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-indicator {
+  background: #FF6B35 !important;
+  height: 100% !important;
+  border-radius: 12px !important;
+  transition: width 0.1s linear !important;
+}
+
+/* Handle (thumb) styling */
+.abcjs-audio-container .abcjs-midi-progress-background input[type='range'] {
+  -webkit-appearance: none !important;
+  width: 100% !important;
+  height: 10px !important;
+  background: transparent !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin: 0 !important;
+  cursor: pointer !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-background input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #FF6B35 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+  margin-top: -3px !important;
+}
+
+.abcjs-midi-progress-background input[type='range']::-moz-range-thumb {
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #FF6B35 !important;
+  cursor: pointer !important;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Style the control buttons to match MUI dark theme */
+.abcjs-audio-container .abcjs-inline-audio button {
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+  margin: 0 !important; /* Remove margin since we're using gap */
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  color: #FFFFFF;
+  transition: background-color 0.2s ease-in-out;
+  box-sizing: border-box !important;
+}
+
+/* Fix icon sizing and centering - constrain SVG icons to prevent cramping */
+.abcjs-audio-container .abcjs-inline-audio button svg {
+  width: 18px !important;
+  height: 18px !important;
+  min-width: 18px !important;
+  min-height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure proper centering by targeting the Font Awesome SVG structure */
+.abcjs-audio-container .abcjs-inline-audio button svg path {
+  transform-origin: center !important;
+}
+
+/* Visual hierarchy - make play button larger - more specific selector to override general button rule */
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-start {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  background: rgba(255, 255, 255, 0.06);  /* Slightly more prominent */
+}
+
+/* Larger icon for play button - more specific selector */
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-start svg {
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  max-width: 24px !important;
+  max-height: 24px !important;
+}
+
+/* Add spacing between button groups - restart button has extra left margin */
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-reset {
+  margin-left: 8px !important; /* Reduced since we have gap now */
+}
+
+.abcjs-audio-container .abcjs-inline-audio button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Remove focus outline */
+.abcjs-midi-progress-background input[type='range']:focus {
+  outline: none;
+}
+
+/* Hover state for the handle */
+.abcjs-midi-progress-background input[type='range']:hover::-webkit-slider-thumb {
+  transform: scale(1.1);
+}
+
+.abcjs-midi-progress-background input[type='range']:hover::-moz-range-thumb {
+  transform: scale(1.1);
+}
+
+/* Disabled state */
+.abcjs-inline-audio.disabled {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* Time display */
+.abcjs-midi-clock {
+  color: rgba(255, 255, 255, 0.7); /* text.secondary color */
+  font-family: "Inter", "Roboto", "Helvetica", "Arial", sans-serif;
+  white-space: nowrap !important; /* Prevent time from wrapping */
+}
+
+/* Tempo/BPM display styling */
+.abcjs-audio-container .abcjs-inline-audio .abcjs-tempo-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  white-space: nowrap !important;
+}
+
+/* Group controls on a single line */
+.abcjs-audio-container .abcjs-inline-audio > * {
+  flex-shrink: 0; /* Prevent controls from shrinking */
+}
+
+/* Selection and hover states */
+.abcjs-audio-container .abcjs-inline-audio button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.5); /* primary.main with opacity */
+}
+
+.abcjs-audio-container .abcjs-inline-audio button:active {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Cursor and highlighting styles */
+.abcjs-cursor {
+  stroke: red;
+  stroke-width: 2;
+}
+
+.highlight {
+  fill: #0a9ecc;
+}
+
+/* Click interaction */
+.abcjs-note {
+  cursor: pointer;
+}

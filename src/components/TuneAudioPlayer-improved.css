@@ -1,0 +1,358 @@
+/* Import the base abcjs audio styles */
+@import 'abcjs/abcjs-audio.css';
+
+/* ===============================================
+   CONTAINER & LAYOUT 
+   =============================================== */
+.abcjs-audio-container {
+  background: linear-gradient(135deg, #2a2a2a 0%, #252525 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  margin: 12px 0;
+}
+
+.abcjs-audio-container .abcjs-inline-audio {
+  height: auto !important;
+  display: grid !important;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px !important;
+  align-items: center !important;
+  padding: 0 !important;
+}
+
+/* Group transport controls together */
+.abcjs-audio-container .abcjs-inline-audio::before {
+  content: '';
+  grid-column: 1;
+  display: flex;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  border-radius: 12px;
+  position: absolute;
+  left: 20px;
+  width: fit-content;
+}
+
+/* ===============================================
+   BUTTON STYLES
+   =============================================== */
+.abcjs-audio-container .abcjs-inline-audio button {
+  padding: 0 !important;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 2;
+}
+
+/* Play button - Primary style */
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-start {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  background: linear-gradient(135deg, #FF6B35 0%, #FF8855 100%) !important;
+  border: none !important;
+  margin: 0 8px !important;
+}
+
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-start:hover {
+  background: linear-gradient(135deg, #FF8855 0%, #FFA065 100%) !important;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.3) !important;
+  transform: scale(1.05);
+}
+
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-start:active {
+  transform: scale(0.98);
+}
+
+/* Other buttons hover state */
+.abcjs-audio-container .abcjs-inline-audio button:not(.abcjs-midi-start):hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
+}
+
+/* Active/Enabled states */
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-pushed {
+  background: rgba(255, 107, 53, 0.2) !important;
+  border-color: #FF6B35 !important;
+  color: #FF6B35 !important;
+}
+
+/* Icon sizing */
+.abcjs-audio-container .abcjs-inline-audio button svg {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  max-height: 16px !important;
+}
+
+.abcjs-audio-container .abcjs-inline-audio button.abcjs-midi-start svg {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+}
+
+/* ===============================================
+   PROGRESS BAR
+   =============================================== */
+.abcjs-audio-container .abcjs-midi-progress-background {
+  background: rgba(255, 255, 255, 0.08) !important;
+  height: 8px !important;
+  border-radius: 4px !important;
+  border: none !important;
+  position: relative !important;
+  flex: 1 !important;
+  cursor: pointer !important;
+  transition: height 0.2s ease !important;
+  overflow: visible !important;
+  margin: 0 16px !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-background:hover {
+  height: 10px !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-indicator {
+  background: linear-gradient(90deg, #FF6B35 0%, #FF8855 100%) !important;
+  height: 100% !important;
+  border-radius: 4px !important;
+  transition: width 0.1s linear !important;
+  position: relative;
+}
+
+/* Progress handle styling */
+.abcjs-audio-container .abcjs-midi-progress-background input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 50% !important;
+  background: #FFFFFF !important;
+  border: 2px solid #FF6B35 !important;
+  cursor: grab !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  opacity: 0 !important;
+  transition: opacity 0.2s !important;
+  margin-top: -4px !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-background:hover input[type='range']::-webkit-slider-thumb {
+  opacity: 1 !important;
+}
+
+.abcjs-audio-container .abcjs-midi-progress-background input[type='range']::-webkit-slider-thumb:active {
+  cursor: grabbing !important;
+  transform: scale(1.1);
+}
+
+/* ===============================================
+   TIME DISPLAY
+   =============================================== */
+.abcjs-midi-clock {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-family: 'SF Mono', 'Monaco', 'Courier New', monospace !important;
+  font-size: 13px !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+/* Add separator and total time */
+.abcjs-midi-clock::after {
+  content: ' / 0:00';
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+}
+
+/* ===============================================
+   TEMPO/WARP CONTROL
+   =============================================== */
+.abcjs-audio-container .abcjs-tempo-wrapper {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px 12px !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 8px !important;
+  margin-left: auto !important;
+  white-space: nowrap !important;
+}
+
+/* Add label before tempo */
+.abcjs-audio-container .abcjs-tempo-wrapper::before {
+  content: 'TEMPO';
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Style the tempo text */
+.abcjs-audio-container .abcjs-tempo-wrapper .abcjs-midi-tempo {
+  color: #FF6B35 !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  min-width: 60px !important;
+}
+
+/* Warp slider container */
+.abcjs-audio-container .abcjs-warp-canvas {
+  grid-column: 1 / -1; /* Full width on new row */
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0 0 0 !important;
+  margin-top: 16px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Warp slider styling */
+.abcjs-audio-container input[type='range'].abcjs-warp-slider {
+  flex: 0 0 120px;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FF6B35;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+
+.abcjs-audio-container input[type='range'].abcjs-warp-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* ===============================================
+   FOCUS STATES
+   =============================================== */
+.abcjs-audio-container .abcjs-inline-audio button:focus-visible {
+  outline: 2px solid #FF6B35 !important;
+  outline-offset: 2px !important;
+}
+
+/* ===============================================
+   DISABLED STATE
+   =============================================== */
+.abcjs-inline-audio.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  filter: grayscale(0.3);
+}
+
+/* ===============================================
+   CURSOR & HIGHLIGHTING
+   =============================================== */
+.abcjs-cursor {
+  stroke: #FF6B35;
+  stroke-width: 2;
+  opacity: 0.8;
+}
+
+.highlight {
+  fill: rgba(255, 107, 53, 0.2);
+  stroke: #FF6B35;
+  stroke-width: 1;
+}
+
+/* ===============================================
+   TOOLTIPS (via title attribute)
+   =============================================== */
+.abcjs-audio-container .abcjs-inline-audio button {
+  position: relative;
+}
+
+.abcjs-audio-container .abcjs-inline-audio button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  pointer-events: none;
+  margin-bottom: 8px;
+  z-index: 1000;
+}
+
+/* ===============================================
+   DOWNLOAD BUTTONS (Custom addition)
+   =============================================== */
+.audio-download-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.audio-download-controls button {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.audio-download-controls button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.audio-download-controls button svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ===============================================
+   RESPONSIVE DESIGN
+   =============================================== */
+@media (max-width: 640px) {
+  .abcjs-audio-container .abcjs-inline-audio {
+    grid-template-columns: 1fr;
+    gap: 12px !important;
+  }
+  
+  .abcjs-audio-container .abcjs-warp-canvas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .abcjs-audio-container input[type='range'].abcjs-warp-slider {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+}
