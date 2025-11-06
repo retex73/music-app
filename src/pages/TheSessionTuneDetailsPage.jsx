@@ -125,7 +125,7 @@ function TheSessionTuneDetailsPage() {
   const firstSetting = settings[0];
 
   return (
-    <Box sx={{ p: 3, maxWidth: "800px", mx: "auto" }}>
+    <Box sx={{ p: 3, maxWidth: "1000px", mx: "auto" }}>
       <Button
         onClick={() => navigate("/thesession")}
         startIcon={<ArrowBackIcon />}
