@@ -12,7 +12,7 @@ import {
   Button,
 } from "@mui/material";
 import abcjs from "abcjs";
-import TuneAudioPlayer from "../TuneAudioPlayer";
+import TuneAudioPlayerCustom from "../TuneAudioPlayerCustom";
 import SheetMusicModal from "./SheetMusicModal";
 import {
   DndContext,
@@ -343,7 +343,7 @@ ${setting.abc}`;
                           borderRadius: "20px",
                         }}
                       />
-                      <TuneAudioPlayer
+                      <TuneAudioPlayerCustom
                         visualObj={visualObjs[setting.id]}
                         settingId={setting.id}
                       />
