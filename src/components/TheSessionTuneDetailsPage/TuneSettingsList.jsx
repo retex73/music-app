@@ -12,7 +12,8 @@ import {
   Button,
 } from "@mui/material";
 import abcjs from "abcjs";
-import TuneAudioPlayer from "../TuneAudioPlayer";
+import TuneAudioPlayerCustom from "../TuneAudioPlayerCustom";
+import TuneAudioPlayerToneJS from "../TuneAudioPlayerToneJS";
 import SheetMusicModal from "./SheetMusicModal";
 import {
   DndContext,
@@ -27,6 +28,10 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+
+// Feature flag: Choose audio player implementation
+const USE_TONEJS_PLAYER = process.env.REACT_APP_AUDIO_PLAYER === 'tonejs';
+const AudioPlayer = USE_TONEJS_PLAYER ? TuneAudioPlayerToneJS : TuneAudioPlayerCustom;
 
 const SortableCard = ({ setting, children, id }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -89,7 +94,11 @@ ${setting.abc}`;
         add_classes: true,
       })[0];
 
-      newVisualObjs[setting.id] = visualObj;
+      // Store both visualObj and the complete ABC text
+      newVisualObjs[setting.id] = {
+        visualObj,
+        abcText: completeAbc
+      };
     });
 
     setVisualObjs(newVisualObjs);
@@ -343,8 +352,9 @@ ${setting.abc}`;
                           borderRadius: "20px",
                         }}
                       />
-                      <TuneAudioPlayer
-                        visualObj={visualObjs[setting.id]}
+                      <AudioPlayer
+                        visualObj={visualObjs[setting.id]?.visualObj}
+                        abcText={visualObjs[setting.id]?.abcText}
                         settingId={setting.id}
                       />
                     </Stack>

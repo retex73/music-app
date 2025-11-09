@@ -1,0 +1,137 @@
+/* ===============================================
+   CURSOR & HIGHLIGHTING STYLES
+   Styles for note tracking during playback
+   =============================================== */
+
+/* SVG cursor line during playback */
+.abcjs-cursor {
+  stroke: #FF6B35 !important;
+  stroke-width: 2 !important;
+  opacity: 0.8 !important;
+  filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.5));
+  pointer-events: none;
+}
+
+/* Note highlighting during playback */
+.highlight {
+  fill: rgba(255, 107, 53, 0.15) !important;
+  stroke: #FF6B35 !important;
+  stroke-width: 1 !important;
+  transition: fill 0.1s ease;
+}
+
+/* Note interactive styling */
+.abcjs-note {
+  cursor: pointer;
+  transition: fill 0.2s ease;
+}
+
+.abcjs-note:hover {
+  fill: rgba(255, 107, 53, 0.1);
+}
+
+/* ===============================================
+   TRANSPORT GROUP STYLING
+   Visual grouping of transport controls
+   =============================================== */
+
+.transport-group {
+  position: relative;
+}
+
+/* Optional: Add subtle background grouping effect */
+.transport-group::before {
+  content: '';
+  position: absolute;
+  inset: -4px -8px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.transport-group:hover::before {
+  opacity: 1;
+}
+
+/* Ensure buttons appear above background */
+.transport-group button {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===============================================
+   FOCUS & ACCESSIBILITY
+   =============================================== */
+
+.transport-group button:focus-visible {
+  outline: 2px solid #FF6B35 !important;
+  outline-offset: 2px !important;
+}
+
+/* Slider focus visibility */
+.MuiSlider-root:focus-visible {
+  outline: 2px solid #FF6B35 !important;
+  outline-offset: 2px !important;
+}
+
+/* ===============================================
+   SMOOTH ANIMATIONS
+   =============================================== */
+
+@keyframes playPulse {
+  0% {
+    box-shadow: 0 2px 12px rgba(255, 107, 53, 0.2),
+                0 0 0 0 rgba(255, 107, 53, 0.7);
+  }
+  50% {
+    box-shadow: 0 2px 12px rgba(255, 107, 53, 0.2),
+                0 0 0 8px rgba(255, 107, 53, 0);
+  }
+  100% {
+    box-shadow: 0 2px 12px rgba(255, 107, 53, 0.2),
+                0 0 0 0 rgba(255, 107, 53, 0);
+  }
+}
+
+/* Optional: Add pulse to play button when playing */
+.transport-group button[aria-label*="Pause"] {
+  /* animation: playPulse 2s infinite; */
+}
+
+/* ===============================================
+   RESPONSIVE DESIGN
+   =============================================== */
+
+@media (max-width: 768px) {
+  /* Stack on smaller screens if needed */
+}
+
+@media (max-width: 640px) {
+  /* Additional mobile optimizations */
+}
+
+/* ===============================================
+   REDUCED MOTION SUPPORT
+   Respect prefers-reduced-motion accessibility setting
+   =============================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .abcjs-cursor {
+    animation: none !important;
+  }
+
+  .highlight {
+    transition: none !important;
+  }
+
+  .abcjs-note {
+    transition: none !important;
+  }
+
+  .transport-group::before {
+    transition: none !important;
+  }
+}

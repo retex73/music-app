@@ -210,26 +210,70 @@ const TuneAudioPlayer = ({ visualObj, settingId }) => {
 
       {isReady && (
         <>
-          <Box sx={{ mt: 1 }}>
-            <Typography variant="body2">
-              Beat: {beatInfo.current}/{beatInfo.total} Time:{" "}
-              {beatInfo.totalTime.toFixed(2)}s
-            </Typography>
-          </Box>
-
-          <Box sx={{ mt: 1, display: "flex", gap: 1 }}>
-            <Button onClick={downloadMidi} variant="outlined" size="small">
-              Download MIDI
-            </Button>
-            <Button
-              onClick={() =>
-                synthControlRef.current?.download(`tune-${settingId}.wav`)
-              }
-              variant="outlined"
-              size="small"
+          <Box
+            sx={{
+              mt: 2,
+              pt: 2,
+              borderTop: 1,
+              borderColor: 'rgba(255, 255, 255, 0.08)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: 2
+            }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                color: 'text.secondary',
+                fontSize: '0.875rem'
+              }}
             >
-              Download WAV
-            </Button>
+              Beat: <span style={{ color: '#FF6B35', fontWeight: 500 }}>{beatInfo.current}/{beatInfo.total}</span> •
+              Time: <span style={{ color: '#FF6B35', fontWeight: 500 }}>{beatInfo.totalTime.toFixed(2)}s</span>
+            </Typography>
+
+            <Box className="audio-download-controls" sx={{ display: "flex", gap: 1 }}>
+              <Button
+                onClick={downloadMidi}
+                variant="outlined"
+                size="small"
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  padding: '6px 12px',
+                  fontSize: '0.75rem',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  }
+                }}
+              >
+                Download MIDI
+              </Button>
+              <Button
+                onClick={() =>
+                  synthControlRef.current?.download(`tune-${settingId}.wav`)
+                }
+                variant="outlined"
+                size="small"
+                sx={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  borderColor: 'rgba(255, 255, 255, 0.1)',
+                  borderRadius: '8px',
+                  padding: '6px 12px',
+                  fontSize: '0.75rem',
+                  '&:hover': {
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderColor: 'rgba(255, 255, 255, 0.2)',
+                  }
+                }}
+              >
+                Download WAV
+              </Button>
+            </Box>
           </Box>
         </>
       )}
