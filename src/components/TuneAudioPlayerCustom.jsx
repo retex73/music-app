@@ -256,7 +256,6 @@ const TuneAudioPlayerCustom = ({ visualObj, settingId }) => {
     // CreateSynth doesn't support seeking
     // This could be implemented by stopping and restarting from a position
     // but that would require more complex state management
-    console.log("Seeking not supported in CreateSynth");
   };
 
 
@@ -283,6 +282,7 @@ const TuneAudioPlayerCustom = ({ visualObj, settingId }) => {
    */
   const downloadMidi = useCallback(() => {
     const midi = abcjs.synth.getMidiFile(visualObj);
+
     const element = document.createElement("a");
     element.setAttribute("href", "data:audio/midi;base64," + btoa(midi));
     element.setAttribute("download", `tune-${settingId}.midi`);
@@ -298,7 +298,6 @@ const TuneAudioPlayerCustom = ({ visualObj, settingId }) => {
     try {
       // CreateSynth doesn't have a direct download method
       // For now, we'll disable WAV download functionality
-      console.log("WAV download not yet implemented for CreateSynth API");
     } catch (error) {
       console.error("Error downloading WAV:", error);
     }

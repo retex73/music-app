@@ -57,25 +57,21 @@ export async function abcToMidiArrayBuffer(abcText, versionIndex = 0) {
 async function normalizeToArrayBuffer(out, idx) {
   // Case 1: Blob (ideal, modern abcjs)
   if (out instanceof Blob) {
-    console.log("✓ abcjs returned Blob (ideal)");
     return await out.arrayBuffer();
   }
 
   // Case 2: ArrayBuffer (direct)
   if (out instanceof ArrayBuffer) {
-    console.log("✓ abcjs returned ArrayBuffer");
     return out;
   }
 
   // Case 3: TypedArray (Uint8Array, etc.)
   if (ArrayBuffer.isView(out)) {
-    console.log("✓ abcjs returned TypedArray");
     return out.buffer;
   }
 
   // Case 4: Array (multi-version tunes)
   if (Array.isArray(out)) {
-    console.log(`✓ abcjs returned Array (length: ${out.length}), selecting index ${idx}`);
     if (out.length === 0) {
       throw new Error("abcjs returned an empty MIDI array");
     }
@@ -85,29 +81,23 @@ async function normalizeToArrayBuffer(out, idx) {
 
   // Case 5: Object wrapper (various shapes)
   if (out && typeof out === "object") {
-    console.log("✓ abcjs returned object, checking properties:", Object.keys(out).slice(0, 5).join(", "));
-
     // Try .blob property (wrapped Blob)
     if (out.blob instanceof Blob) {
-      console.log("  → Using .blob property");
       return await out.blob.arrayBuffer();
     }
 
     // Try .arrayBuffer() method
     if (typeof out.arrayBuffer === "function") {
-      console.log("  → Using .arrayBuffer() method");
       return await out.arrayBuffer();
     }
 
     // Try .buffer property (ArrayBuffer)
     if (out.buffer instanceof ArrayBuffer) {
-      console.log("  → Using .buffer property");
       return out.buffer;
     }
 
     // Try .data property (percent-encoded string)
     if (out.data && typeof out.data === "string") {
-      console.log("  → Using .data property");
       return stringToBytesArrayBuffer(out.data);
     }
 
@@ -127,7 +117,6 @@ async function normalizeToArrayBuffer(out, idx) {
       );
     }
 
-    console.log("✓ abcjs returned string, decoding...");
     return stringToBytesArrayBuffer(out);
   }
 
